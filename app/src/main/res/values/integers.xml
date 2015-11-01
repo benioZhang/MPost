@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="splash_mills">1000</integer>
+
+    <integer name="album_span_count">3</integer>
+    <integer name="thumbnail_span_count">3</integer>
+
+    <integer name="max_comment_content_length">100</integer>
+    <integer name="max_post_content_length">300</integer>
+    <integer name="max_photo_count">6</integer>
+    <integer name="min_photo_count">1</integer>
+</resources>

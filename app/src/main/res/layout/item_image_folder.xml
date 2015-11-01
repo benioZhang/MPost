@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/iv_item_image_folder"
+        android:layout_width="@dimen/image_folder_size"
+        android:layout_height="@dimen/image_folder_size"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        tools:src="@mipmap/ic_user_def"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:layout_toEndOf="@id/iv_item_image_folder"
+        android:layout_toRightOf="@id/iv_item_image_folder"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_item_image_folder_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:textColor="?attr/textColor"
+            android:textSize="14sp"
+            tools:text="所有图片"/>
+
+        <TextView
+            android:id="@+id/tv_item_image_folder_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_item_image_folder_name"
+            android:layout_marginTop="5dp"
+            android:textColor="?attr/textInfoColor"
+            android:textSize="13sp"
+            tools:text="12张"/>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_item_image_folder_selected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@mipmap/ic_done"/>
+
+</RelativeLayout>

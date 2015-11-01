@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/iv_item_author"
+        android:layout_width="@dimen/thumbnail_size"
+        android:layout_height="@dimen/thumbnail_size"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:scaleType="centerCrop"
+        tools:src="@mipmap/ic_launcher"/>
+
+    <TextView
+        android:id="@+id/tv_item_author"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/tv_item_time"
+        android:layout_alignLeft="@+id/tv_item_time"
+        android:layout_alignStart="@+id/tv_item_time"
+        android:singleLine="true"
+        android:textColor="?attr/textColor"
+        android:textSize="15sp"
+        tools:text="name"/>
+
+    <TextView
+        android:id="@+id/tv_item_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/tv_item_content"
+        android:layout_toEndOf="@+id/iv_item_author"
+        android:layout_toRightOf="@+id/iv_item_author"
+        android:singleLine="true"
+        android:textColor="?attr/textInfoColor"
+        android:textSize="12sp"
+        tools:text="2015-10-22 17:19"/>
+
+    <TextView
+        android:id="@+id/tv_item_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/iv_item_author"
+        android:layout_alignStart="@+id/iv_item_author"
+        android:layout_below="@+id/iv_item_author"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:textColor="?attr/textColor"
+        android:textSize="16sp"
+        tools:text="neirong\neirong\neirong\neirong\neirong\neirong\neirong\neirong"/>
+
+    <include
+        layout="@layout/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/tv_item_content"/>
+
+</RelativeLayout>

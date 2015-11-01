@@ -1,0 +1,14 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <dimen name="view_size">48dp</dimen>
+
+    <dimen name="post_content_size">180dp</dimen>
+
+    <dimen name="image_folder_size">100dp</dimen>
+    <dimen name="thumbnail_size">50dp</dimen>
+
+    <dimen name="comment_text_size">15sp</dimen>
+</resources>
