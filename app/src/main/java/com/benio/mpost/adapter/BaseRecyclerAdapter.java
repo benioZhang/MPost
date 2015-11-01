@@ -115,7 +115,7 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<Recycl
 
     public boolean addAll(int position, Collection<? extends T> collection) {
         if (mData.addAll(position, collection)) {
-            notifyItemChanged(position, collection.size());
+            notifyItemRangeChanged(position, collection.size());
             return true;
         }
         return false;
@@ -124,7 +124,7 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<Recycl
     public boolean addAll(Collection<? extends T> collection) {
         int lastIndex = mData.size();
         if (mData.addAll(collection)) {
-            notifyItemChanged(lastIndex, collection.size());
+            notifyItemRangeChanged(lastIndex, collection.size());
             return true;
         }
         return false;

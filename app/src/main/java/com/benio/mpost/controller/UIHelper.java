@@ -138,7 +138,7 @@ public class UIHelper {
      * @param args     传入Fragment的参数
      */
     public static void showFragmentContainerForResult(Fragment fragment, int requestCode, @Container.ContainerType int id, Bundle args) {
-        Intent intent = FragmentContainerActivity.newIntent(fragment.getContext(), id, args);
+        Intent intent = FragmentContainerActivity.newIntent(fragment.getActivity(), id, args);
         fragment.startActivityForResult(intent, requestCode);
     }
 

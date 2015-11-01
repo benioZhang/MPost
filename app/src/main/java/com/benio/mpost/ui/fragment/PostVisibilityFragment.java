@@ -26,7 +26,7 @@ public class PostVisibilityFragment extends RecyclerFragment implements AdapterV
     @Override
     public BaseRecyclerAdapter onCreateAdapter() {
         List<PostVisibility> list = Arrays.asList(PostVisibility.VALUES);
-        mAdapter = new PostVisibilityAdapter(getContext(), list);
+        mAdapter = new PostVisibilityAdapter(getActivity(), list);
         mAdapter.setOnItemClickListener(this);
         return mAdapter;
     }

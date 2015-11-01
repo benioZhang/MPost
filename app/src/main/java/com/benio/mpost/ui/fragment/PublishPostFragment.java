@@ -111,7 +111,7 @@ public class PublishPostFragment extends RecyclerFragment implements AdapterView
 
     @Override
     public BaseRecyclerAdapter onCreateAdapter() {
-        mAdapter = new ThumbnailAdapter(getContext());
+        mAdapter = new ThumbnailAdapter(getActivity());
         mAdapter.addAlbum();
         mAdapter.setOnItemClickListener(this);
         return mAdapter;

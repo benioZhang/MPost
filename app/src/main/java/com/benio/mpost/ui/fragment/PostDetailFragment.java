@@ -96,8 +96,8 @@ public class PostDetailFragment extends BaseFragment {
         if (post.hasPhoto()) {
             int spanCount = getResources().getInteger(R.integer.thumbnail_span_count);
             List<String> photoList = post.getPhotoList();
-            ThumbnailAdapter adapter = new ThumbnailAdapter(getContext(), photoList);
-            RecyclerView.LayoutManager layoutManager = new FullyGridLayoutManager(getContext(), spanCount);
+            ThumbnailAdapter adapter = new ThumbnailAdapter(getActivity(), photoList);
+            RecyclerView.LayoutManager layoutManager = new FullyGridLayoutManager(getActivity(), spanCount);
             if (photoList.size() <= spanCount) {
                 //因为FullyGridLayoutManager有bug
                 //在图片数量为1的时候显示不了
@@ -288,7 +288,7 @@ public class PostDetailFragment extends BaseFragment {
         if (mPostDetail.isReady()) {
             hideProgress();
             //set adapter
-            mAdapter = new CommentAdapter(getContext(), mPostDetail.getCommentList());
+            mAdapter = new CommentAdapter(getActivity(), mPostDetail.getCommentList());
             mAdapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -309,7 +309,7 @@ public class PostDetailFragment extends BaseFragment {
                     mCommentEditText.setText("");
                 }
             });
-            mCommentRecyclerView.setLayoutManager(new FullyLinearLayoutManager(getContext()));
+            mCommentRecyclerView.setLayoutManager(new FullyLinearLayoutManager(getActivity()));
             mCommentRecyclerView.setAdapter(mAdapter);
 
             setupLike();

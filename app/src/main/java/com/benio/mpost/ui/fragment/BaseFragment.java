@@ -1,7 +1,7 @@
 package com.benio.mpost.ui.fragment;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -24,10 +24,15 @@ public abstract class BaseFragment extends Fragment implements ProgressControlle
 
     private FragmentHelper mFragmentHelper;
 
+//    @Override
+//    public void onAttach(Context context) {
+//        super.onAttach(context);
+//        getFragmentHelper().onAttach(context);
+//    }
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        getFragmentHelper().onAttach(context);
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        getFragmentHelper().onAttach(activity);
     }
 
     @Override

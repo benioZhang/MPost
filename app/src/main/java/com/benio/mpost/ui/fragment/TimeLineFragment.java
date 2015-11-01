@@ -73,7 +73,7 @@ public class TimeLineFragment extends RefreshRecyclerFragment {
 
             @Override
             public void onSuccess(List<MPost> list) {
-                mAdapter = new TimeLineAdapter(getContext(), list);
+                mAdapter = new TimeLineAdapter(getActivity(), list);
                 mAdapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
