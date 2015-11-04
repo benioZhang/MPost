@@ -10,6 +10,8 @@ public final class Column {
         String NAME = "name";
         String PROTRAIT = "portraitUrl";
         String FOLLOW_RELATION = "followRelation";
+        String FAV_RELATION = "favRelation";
+        String LIKE_RELATION = "likeRelation";
     }
 
     public interface Post extends Base {
@@ -18,8 +20,8 @@ public final class Column {
         String AUTHOR = "author";
         String LIKE_COUNT = "likeCount";
         String FAVOR_COUNT = "favorCount";
-        String LIKE_RELATION = "likeRelation";
-        String FAVOR_RELATION = "favorRelation";
+//        String LIKE_RELATION = "likeRelation";
+//        String FAVOR_RELATION = "favorRelation";
         String VISIBILITY = "visibility";
     }
 

@@ -2,7 +2,6 @@ package com.benio.mpost.interf.impl;
 
 import com.benio.mpost.bean.MPost;
 import com.benio.mpost.bean.MUser;
-import com.benio.mpost.controller.MPostApi;
 import com.benio.mpost.interf.CommentListener;
 import com.benio.mpost.interf.FavorListener;
 import com.benio.mpost.interf.FollowListener;
@@ -40,7 +39,8 @@ public class ActionHandler implements FavorListener, LikeListener, FollowListene
 
     @Override
     public void favor(MPost post, boolean isFavored, ResponseListener listener) {
-        MPostApi.favorPost(mUser, post, isFavored, listener);
+        // TODO: 11/4/15
+//        MPostApi.favorPost(mUser, post, isFavored, listener);
     }
 
     @Override

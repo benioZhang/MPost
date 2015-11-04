@@ -13,13 +13,17 @@ import android.widget.TextView;
 
 import com.benio.mpost.R;
 import com.benio.mpost.app.AppContext;
+import com.benio.mpost.bean.MPost;
 import com.benio.mpost.bean.MUser;
+import com.benio.mpost.controller.MPostApi;
 import com.benio.mpost.controller.UIHelper;
+import com.benio.mpost.interf.impl.QueryListener;
 import com.benio.mpost.network.ImageLoader;
 import com.benio.mpost.ui.fragment.TimeLineFragment;
 import com.benio.mpost.util.AKView;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -86,6 +90,17 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 break;
 
             case R.id.action_star:
+                MPostApi.getMyFavouritePost(AppContext.getInstance().getUser(), new QueryListener<MPost>() {
+                    @Override
+                    public void onSuccess(List<MPost> list) {
+                        // TODO: 11/4/15 处理显示个人收藏的post 
+                    }
+
+                    @Override
+                    public void onFailure(int code, String msg) {
+
+                    }
+                });
                 break;
 
             case R.id.action_logout:

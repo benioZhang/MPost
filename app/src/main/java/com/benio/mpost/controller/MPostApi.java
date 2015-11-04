@@ -60,16 +60,52 @@ public class MPostApi {
      * @param listener
      */
     public static void likePost(final MUser user, final MPost post, boolean isLiked, Response listener) {
+//        BmobRelation relation = new BmobRelation();
+//        if (isLiked) {
+//            relation.add(user);
+//        } else {
+//            relation.remove(user);
+//        }
+//        post.setLikeRelation(relation);
+//        post.increment(Column.Post.LIKE_COUNT, isLiked ? 1 : -1);//赞数 +1 or -1
+//        post.update(getContext(), listener.update());
         BmobRelation relation = new BmobRelation();
         if (isLiked) {
-            relation.add(user);
+            relation.add(post);
         } else {
             relation.remove(user);
         }
-        post.setLikeRelation(relation);
-        post.increment(Column.Post.LIKE_COUNT, isLiked ? 1 : -1);//赞数 +1 or -1
+        user.setLikeRelation(relation);
+        user.update(getContext(), listener.update());
+    }
+
+    /**
+     * 更新post 点赞数
+     *
+     * @param post
+     * @param isLiked
+     * @param listener
+     */
+    public static void updatePostLikedCount(MPost post, boolean isLiked, Response listener) {
+        post.increment(Column.Post.LIKE_COUNT, isLiked ? +1 : -1);//点赞数 +1 or -1
         post.update(getContext(), listener.update());
     }
+
+    /**
+     * 显示个人点赞 post
+     *
+     * @param user
+     * @param listener
+     */
+    public static void getMyLikePost(MUser user, FindListener<MPost> listener) {
+        BmobQuery<MPost> query = new BmobQuery<>();
+        query.addWhereRelatedTo(Column.User.LIKE_RELATION, new BmobPointer(user));
+        query.include(Column.Post.AUTHOR);
+        query.order(Column.Post.REVERSE_CREATED_AT);
+        query.setLimit(Constant.QUERY_LIMIT);
+        query.findObjects(getContext(), listener);
+    }
+
 
     /**
      * 收藏帖/收藏赞
@@ -79,15 +115,51 @@ public class MPostApi {
      * @param listener
      */
     public static void favorPost(final MUser user, final MPost post, boolean isFavored, Response listener) {
+//        BmobRelation favorRelation = new BmobRelation();
+//        if (isFavored) {
+//            favorRelation.add(user);
+//        } else {
+//            favorRelation.remove(user);
+//        }
+//        post.setFavorRelation(favorRelation);
+//        post.increment(Column.Post.FAVOR_COUNT, isFavored ? +1 : -1);//收藏数 +1 or -1
+//        post.update(getContext(), listener.update());
         BmobRelation favorRelation = new BmobRelation();
         if (isFavored) {
-            favorRelation.add(user);
+            favorRelation.add(post);
         } else {
-            favorRelation.remove(user);
+            favorRelation.remove(post);
         }
-        post.setFavorRelation(favorRelation);
+        user.setFavRelation(favorRelation);
+        user.update(getContext(), listener.update());
+    }
+
+    /**
+     * 收藏完毕更新post表fav数
+     *
+     * @param post
+     * @param isFavored
+     * @param listener
+     */
+    public static void updatePostFavoredCount(final MPost post, boolean isFavored, Response listener) {
         post.increment(Column.Post.FAVOR_COUNT, isFavored ? +1 : -1);//收藏数 +1 or -1
         post.update(getContext(), listener.update());
+    }
+
+
+    /**
+     * 显示个人收藏post
+     *
+     * @param user
+     * @param listener
+     */
+    public static void getMyFavouritePost(MUser user, FindListener<MPost> listener) {
+        BmobQuery<MPost> query = new BmobQuery<>();
+        query.addWhereRelatedTo(Column.User.FAV_RELATION, new BmobPointer(user));
+        query.include(Column.Post.AUTHOR);
+        query.order(Column.Post.REVERSE_CREATED_AT);
+        query.setLimit(Constant.QUERY_LIMIT);
+        query.findObjects(getContext(), listener);
     }
 
     /**
@@ -110,15 +182,32 @@ public class MPostApi {
     }
 
     /**
+     * 个人正在关注的用户
+     *
+     * @param user
+     * @param listener
+     */
+    public static void getMyFollowingUser(MUser user, FindListener<MUser> listener) {
+        BmobQuery<MUser> query = new BmobQuery<>();
+        query.addWhereRelatedTo(Column.User.FOLLOW_RELATION, new BmobPointer(user));
+        query.setLimit(Constant.QUERY_LIMIT);
+        query.order(Column.Base.REVERSE_CREATED_AT);
+        query.findObjects(getContext(), listener);
+    }
+
+    /**
      * 查询用户是否赞帖
      *
      * @param user
      * @param post
      * @param listener
      */
-    public static void isLikedPost(final MUser user, final MPost post, final FindListener<MUser> listener) {
-        BmobQuery<MUser> query = new BmobQuery<>();
-        query.addWhereRelatedTo(Column.Post.LIKE_RELATION, new BmobPointer(post));
+    public static void isLikedPost(final MUser user, final MPost post, final FindListener<MPost> listener) {
+//        BmobQuery<MUser> query = new BmobQuery<>();
+//        query.addWhereRelatedTo(Column.Post.LIKE_RELATION, new BmobPointer(post));
+//        query.findObjects(getContext(), listener);
+        BmobQuery<MPost> query = new BmobQuery<>();
+        query.addWhereRelatedTo(Column.User.LIKE_RELATION, new BmobPointer(user));
         query.findObjects(getContext(), listener);
     }
 
@@ -141,9 +230,12 @@ public class MPostApi {
      * @param user
      * @param post
      */
-    public static void isFavoredPost(final MUser user, final MPost post, final FindListener<MUser> listener) {
-        BmobQuery<MUser> query = new BmobQuery<>();
-        query.addWhereRelatedTo(Column.Post.FAVOR_RELATION, new BmobPointer(post));
+    public static void isFavoredPost(final MUser user, final MPost post, final FindListener<MPost> listener) {
+//        BmobQuery<MUser> query = new BmobQuery<>();
+//        query.addWhereRelatedTo(Column.Post.FAVOR_RELATION, new BmobPointer(post));
+//        query.findObjects(getContext(), listener);
+        BmobQuery<MPost> query = new BmobQuery<>();
+        query.addWhereRelatedTo(Column.User.FAV_RELATION, new BmobPointer(user));
         query.findObjects(getContext(), listener);
     }
 

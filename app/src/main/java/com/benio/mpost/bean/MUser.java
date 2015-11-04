@@ -10,13 +10,42 @@ import cn.bmob.v3.datatype.BmobRelation;
  * Created by benio on 2015/10/10.
  */
 public class MUser extends BmobUser implements Serializable {
-    /** 昵称 */
+    /**
+     * 昵称
+     */
     private String name;
-    /** 头像url */
+    /**
+     * 头像url
+     */
     private String portraitUrl;
-    /** 保存关注的用户关系 */
+    /**
+     * 保存关注的用户关系
+     */
     private BmobRelation followRelation;
+    /**
+     * 保存用户收藏post关系
+     */
+    private BmobRelation favRelation;
+    /**
+     * 保存用户点赞post关系
+     */
+    private BmobRelation likeRelation;
 
+    public BmobRelation getLikeRelation() {
+        return likeRelation;
+    }
+
+    public void setLikeRelation(BmobRelation likeRelation) {
+        this.likeRelation = likeRelation;
+    }
+
+    public BmobRelation getFavRelation() {
+        return favRelation;
+    }
+
+    public void setFavRelation(BmobRelation favRelation) {
+        this.favRelation = favRelation;
+    }
 
     public String getName() {
         return name;
@@ -52,6 +81,8 @@ public class MUser extends BmobUser implements Serializable {
                 "name='" + name + '\'' +
                 ", portraitUrl='" + portraitUrl + '\'' +
                 ", followRelation=" + followRelation +
+                ", favRelation=" + favRelation +
+                ", likeRelation=" + likeRelation +
                 '}';
     }
 

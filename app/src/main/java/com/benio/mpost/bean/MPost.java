@@ -28,8 +28,8 @@ public class MPost extends BmobObject implements Serializable {
     private Integer favorCount;
     /** 保存帖子与赞帖人的关系 */
     private BmobRelation likeRelation;
-    /** 保存帖子与收藏人的关系 */
-    private BmobRelation favorRelation;
+//    /** 保存帖子与收藏人的关系 */
+//    private BmobRelation favorRelation;
     /** 是否已被收藏 */
     private Boolean isFavored;
     /** 是否已被赞 */
@@ -96,13 +96,13 @@ public class MPost extends BmobObject implements Serializable {
         this.likeRelation = likeRelation;
     }
 
-    public BmobRelation getFavorRelation() {
-        return favorRelation;
-    }
-
-    public void setFavorRelation(BmobRelation favorRelation) {
-        this.favorRelation = favorRelation;
-    }
+//    public BmobRelation getFavorRelation() {
+//        return favorRelation;
+//    }
+//
+//    public void setFavorRelation(BmobRelation favorRelation) {
+//        this.favorRelation = favorRelation;
+//    }
 
     public Boolean isFavored() {
         return isFavored;
