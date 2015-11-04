@@ -27,11 +27,11 @@ public class ImageLoader implements ImageListener {
     }
 
     public void load(ImageView imageView, String string, @DrawableRes int placeholder) {
-        mManager.load(string).placeholder(placeholder).into(imageView);
+        mManager.load(string).placeholder(placeholder).crossFade().fitCenter().into(imageView);
     }
 
     public void load(ImageView imageView, @DrawableRes int res) {
-        mManager.load(res).into(imageView);
+        mManager.load(res).crossFade().fitCenter().into(imageView);
     }
 
     public static ImageLoader getInstance(Fragment fragment) {

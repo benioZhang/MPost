@@ -47,7 +47,7 @@ public class AlbumAdapter extends BaseRecyclerAdapter<ImageFile> {
     @Override
     public void onBindViewHolder(final RecyclerHolder holder, ImageFile data) {
         ImageView iv = holder.getImageView(R.id.iv_item_photo);
-        ImageLoader.getInstance(getContext()).load(iv, data.getPath(), R.mipmap.ic_placeholder);
+        ImageLoader.getInstance(getContext()).load(iv, data.getPath(), R.mipmap.ic_default_image);
 
         //设置选中状态
         View v = holder.getView(R.id.iv_item_photo_selected);

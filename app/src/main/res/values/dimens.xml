@@ -11,4 +11,6 @@
     <dimen name="thumbnail_size">50dp</dimen>
 
     <dimen name="comment_text_size">15sp</dimen>
+
+    <dimen name="image_post_height">130dp</dimen>
 </resources>

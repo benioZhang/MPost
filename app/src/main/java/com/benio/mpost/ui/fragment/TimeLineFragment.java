@@ -51,7 +51,7 @@ public class TimeLineFragment extends RefreshRecyclerFragment {
             @Override
             public void handleMessage(Message msg) {
                 setRefreshingState(false);
-                AKToast.show(getActivity(), "下拉刷新");
+//                AKToast.show(getActivity(), "下拉刷新");
             }
         }.sendEmptyMessageDelayed(1, 2000);
         getPostList();

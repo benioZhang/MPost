@@ -5,9 +5,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.benio.mpost.R;
+import com.benio.mpost.app.AppContext;
 import com.benio.mpost.bean.RecyclerHolder;
 import com.benio.mpost.network.ImageLoader;
 import com.benio.mpost.util.AKView;
+import com.benio.mpost.util.Utils;
 
 import java.util.List;
 
@@ -33,6 +35,7 @@ public class ThumbnailAdapter extends BaseRecyclerAdapter<String> {
         super(context, data);
     }
 
+
     @Override
     public int getLayoutRes(int viewType) {
         return R.layout.item_photo;
@@ -43,20 +46,25 @@ public class ThumbnailAdapter extends BaseRecyclerAdapter<String> {
         RecyclerHolder holder = super.onCreateViewHolder(parent, viewType);
         //重新计算每个图片的宽高
         int count = getContext().getResources().getInteger(R.integer.thumbnail_span_count);
-        int size = parent.getWidth() / count;
-        AKView.updateLayoutParams(holder.itemView, size, size);
+//        int size = parent.getWidth() / count;
+        int size = Utils.getScreenWidth(AppContext.getInstance());
+        AKView.updateLayoutParams(holder.itemView, size, (int) AppContext.getInstance().getResources().getDimension(R.dimen.image_post_height));
         return holder;
     }
 
     @Override
     public void onBindViewHolder(RecyclerHolder holder, String data) {
         ImageView iv = holder.getImageView(R.id.iv_item_photo);
+        iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
         ImageLoader imageLoader = ImageLoader.getInstance(getContext());
         if (ADD_THUMBNAIL.equals(data)) {
-            imageLoader.load(iv, R.mipmap.btn_add);
-            iv.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+            iv.setScaleType(ImageView.ScaleType.CENTER);
+            imageLoader.load(iv, R.mipmap.make_post_add);
+//            iv.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+//            Picasso.with(getContext()).load(R.mipmap.make_post_add).fit().into(iv);
         } else {
-            imageLoader.load(iv, data, R.mipmap.ic_placeholder);
+            imageLoader.load(iv, data, R.mipmap.ic_default_image);
+//            Picasso.with(getContext()).load(data).placeholder(R.mipmap.ic_default_image).fit().into(iv);
         }
     }
 

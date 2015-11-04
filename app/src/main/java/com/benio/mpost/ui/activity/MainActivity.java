@@ -178,4 +178,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             ImageLoader.getInstance(this).load(mUserImageView, R.mipmap.ic_user_def);
         }
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(mFragment!=null){
+            if(mFragment.get() instanceof TimeLineFragment ){
+                ((TimeLineFragment) mFragment.get()).onRefresh();
+            }
+        }
+    }
 }
