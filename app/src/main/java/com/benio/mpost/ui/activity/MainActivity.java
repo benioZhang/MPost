@@ -13,17 +13,16 @@ import android.widget.TextView;
 
 import com.benio.mpost.R;
 import com.benio.mpost.app.AppContext;
-import com.benio.mpost.bean.MPost;
 import com.benio.mpost.bean.MUser;
-import com.benio.mpost.controller.MPostApi;
 import com.benio.mpost.controller.UIHelper;
-import com.benio.mpost.interf.impl.QueryListener;
 import com.benio.mpost.network.ImageLoader;
+import com.benio.mpost.ui.fragment.CommentListFragment;
+import com.benio.mpost.ui.fragment.FavoriteListFragment;
 import com.benio.mpost.ui.fragment.TimeLineFragment;
+import com.benio.mpost.util.AKToast;
 import com.benio.mpost.util.AKView;
 
 import java.lang.ref.WeakReference;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -81,26 +80,22 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         switch (id) {
             //home
             case R.id.action_home:
+                mFragment = new WeakReference<Fragment>(new TimeLineFragment());
+                replaceFragment(mFragment.get());
                 break;
 
             case R.id.action_comment:
+                mFragment = new WeakReference<Fragment>(new CommentListFragment());
+                replaceFragment(mFragment.get());
                 break;
 
             case R.id.action_like:
+                AKToast.show(MainActivity.this, "工程师在研发中");
                 break;
 
             case R.id.action_star:
-                MPostApi.getMyFavouritePost(AppContext.getInstance().getUser(), new QueryListener<MPost>() {
-                    @Override
-                    public void onSuccess(List<MPost> list) {
-                        // TODO: 11/4/15 处理显示个人收藏的post 
-                    }
-
-                    @Override
-                    public void onFailure(int code, String msg) {
-
-                    }
-                });
+                mFragment = new WeakReference<Fragment>(new FavoriteListFragment());
+                replaceFragment(mFragment.get());
                 break;
 
             case R.id.action_logout:
@@ -173,9 +168,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         MUser user = AppContext.getInstance().getUser();
         mNameTextView.setText(user.getName());
         if (user.hasPortrait()) {
-            ImageLoader.getInstance(this).load(mUserImageView, user.getPortraitUrl());
+            ImageLoader.getInstance(this).load(mUserImageView, user.getPortraitUrl(),R.mipmap.ic_default_image);
         } else {
-            ImageLoader.getInstance(this).load(mUserImageView, R.mipmap.ic_user_def);
+            ImageLoader.getInstance(this).load(mUserImageView, R.mipmap.user_default_header);
         }
     }
 

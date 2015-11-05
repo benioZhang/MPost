@@ -7,9 +7,9 @@ import android.widget.AdapterView;
 
 import com.benio.mpost.R;
 import com.benio.mpost.adapter.BaseRecyclerAdapter;
-import com.benio.mpost.adapter.TimeLineAdapter;
-import com.benio.mpost.bean.MPost;
-import com.benio.mpost.bean.MUser;
+import com.benio.mpost.adapter.CommentListAdapter;
+import com.benio.mpost.app.AppContext;
+import com.benio.mpost.bean.Comment;
 import com.benio.mpost.controller.MPostApi;
 import com.benio.mpost.controller.UIHelper;
 import com.benio.mpost.interf.impl.QueryListener;
@@ -20,17 +20,11 @@ import com.benio.mpost.util.Utils;
 import java.util.List;
 
 /**
- * 时间线
- * Created by benio on 2015/10/12.
+ * Created by shau-lok on 11/5/15.
  */
-public class TimeLineFragment extends RefreshRecyclerFragment {
+public class CommentListFragment extends RefreshRecyclerFragment {
 
-    private TimeLineAdapter mAdapter;
-
-    @Override
-    public BaseRecyclerAdapter onCreateAdapter() {
-        return null;
-    }
+    private CommentListAdapter mAdapter;
 
     @Override
     public void onLoad() {
@@ -42,7 +36,8 @@ public class TimeLineFragment extends RefreshRecyclerFragment {
                 AKToast.show(getActivity(), "加载更多");
             }
         }.sendEmptyMessageDelayed(1, 2000);
-        getPostList();
+        getCommentList();
+
     }
 
     @Override
@@ -55,17 +50,23 @@ public class TimeLineFragment extends RefreshRecyclerFragment {
 //                AKToast.show(getActivity(), "下拉刷新");
             }
         }.sendEmptyMessageDelayed(1, 2000);
-        getPostList();
+        getCommentList();
     }
 
     @Override
     protected void initData() {
         super.initData();
-        getPostList();
+        getCommentList();
     }
 
-    void getPostList() {
-        MPostApi.getPostList(new QueryListener<MPost>() {
+    @Override
+    public BaseRecyclerAdapter onCreateAdapter() {
+        return null;
+    }
+
+    void getCommentList() {
+
+        MPostApi.getMyCommentList(AppContext.getInstance().getUser(), new QueryListener<Comment>() {
             @Override
             public void onFailure(int code, String msg) {
                 ErrorLog.log(code, msg);
@@ -73,25 +74,20 @@ public class TimeLineFragment extends RefreshRecyclerFragment {
             }
 
             @Override
-            public void onSuccess(List<MPost> list) {
-                if(!Utils.checkListEmpty(list)) {
-                    mAdapter = new TimeLineAdapter(getActivity(), list);
+            public void onSuccess(List<Comment> list) {
+
+                if (!Utils.checkListEmpty(list)) {
+                    mAdapter = new CommentListAdapter(getActivity(), list);
                     mAdapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            UIHelper.showPostDetail(getActivity(), mAdapter.getItem(position));
-                        }
-                    });
-                    mAdapter.setOnAuthorClickListener(new TimeLineAdapter.OnAuthorClickListener() {
-                        @Override
-                        public void onAuthorClick(MUser author) {
-                            UIHelper.showUserDetail(getActivity(), author);
+                            UIHelper.showPostDetail(getActivity(), mAdapter.getItem(position).getPost());
                         }
                     });
                     setAdapter(mAdapter);
-                }
-                else{
-                    showToast("还没有人发过说说哦～");
+                } else {
+                    // TODO: 11/5/15 内容为空时
+                    showToast("还没收到评论哦~");
                 }
             }
         });

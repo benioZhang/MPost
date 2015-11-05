@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import com.benio.mpost.R;
 import com.benio.mpost.adapter.BaseRecyclerAdapter;
 import com.benio.mpost.adapter.TimeLineAdapter;
+import com.benio.mpost.app.AppContext;
 import com.benio.mpost.bean.MPost;
 import com.benio.mpost.bean.MUser;
 import com.benio.mpost.controller.MPostApi;
@@ -20,10 +21,9 @@ import com.benio.mpost.util.Utils;
 import java.util.List;
 
 /**
- * 时间线
- * Created by benio on 2015/10/12.
+ * Created by shau-lok on 11/5/15.
  */
-public class TimeLineFragment extends RefreshRecyclerFragment {
+public class FavoriteListFragment extends RefreshRecyclerFragment{
 
     private TimeLineAdapter mAdapter;
 
@@ -65,7 +65,7 @@ public class TimeLineFragment extends RefreshRecyclerFragment {
     }
 
     void getPostList() {
-        MPostApi.getPostList(new QueryListener<MPost>() {
+        MPostApi.getMyFavouritePost(AppContext.getInstance().getUser(),new QueryListener<MPost>() {
             @Override
             public void onFailure(int code, String msg) {
                 ErrorLog.log(code, msg);
@@ -74,7 +74,7 @@ public class TimeLineFragment extends RefreshRecyclerFragment {
 
             @Override
             public void onSuccess(List<MPost> list) {
-                if(!Utils.checkListEmpty(list)) {
+                if (!Utils.checkListEmpty(list)) {
                     mAdapter = new TimeLineAdapter(getActivity(), list);
                     mAdapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
@@ -89,9 +89,8 @@ public class TimeLineFragment extends RefreshRecyclerFragment {
                         }
                     });
                     setAdapter(mAdapter);
-                }
-                else{
-                    showToast("还没有人发过说说哦～");
+                } else {
+                    showToast("还没有收藏过哦～");
                 }
             }
         });

@@ -2,6 +2,7 @@ package com.benio.mpost.ui.fragment;
 
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -86,9 +87,9 @@ public class PostDetailFragment extends BaseFragment {
         mContentTextView.setText(post.getContent());
         //set author portrait
         if (author.hasPortrait()) {
-            ImageLoader.getInstance(this).load(mAuthorImageView, author.getPortraitUrl());
+            ImageLoader.getInstance(this).load(mAuthorImageView, author.getPortraitUrl(),R.mipmap.user_default_header);
         } else {
-            ImageLoader.getInstance(this).load(mAuthorImageView, R.mipmap.ic_user_def_2);
+            ImageLoader.getInstance(this).load(mAuthorImageView, R.mipmap.user_default_header);
         }
 
         AKLog.d("xxxx", "photo list :" + post.getPhotoList().toString());
@@ -130,6 +131,7 @@ public class PostDetailFragment extends BaseFragment {
             public void onSuccess(List<MPost> result) {
 //                mPostDetail.setFavored(isUserInList(user, result));
                 mPostDetail.setFavored(isPostInList(post ,result));
+//                mPostDetail.setFavored(!Utils.checkListEmpty(result));
                 checkLoadReady();
             }
 
@@ -147,6 +149,7 @@ public class PostDetailFragment extends BaseFragment {
             public void onSuccess(List<MPost> result) {
 //                mPostDetail.setLiked(isUserInList(user, result));
                 mPostDetail.setLiked(isPostInList(post, result));
+//                mPostDetail.setLiked(!Utils.checkListEmpty(result));
                 checkLoadReady();
             }
 
@@ -322,7 +325,7 @@ public class PostDetailFragment extends BaseFragment {
     private boolean isPostInList(MPost post, List<MPost> list) {
         if (list == null || list.size() < 1) return false;
         for (MPost mPost : list) {
-            if (mPost.equals(post)) return true;
+            if (TextUtils.equals(mPost.getObjectId() ,post.getObjectId())) return true;
         }
         return false;
     }

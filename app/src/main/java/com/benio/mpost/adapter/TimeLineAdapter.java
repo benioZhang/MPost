@@ -54,9 +54,9 @@ public class TimeLineAdapter extends BaseRecyclerAdapter<MPost> {
             });
         }
         if (author.hasPortrait()) {
-            imageLoader.load(iv, author.getPortraitUrl());
+            imageLoader.load(iv, author.getPortraitUrl(),R.mipmap.user_default_header);
         } else {
-            imageLoader.load(iv, R.mipmap.ic_user_def_2);
+            imageLoader.load(iv, R.mipmap.user_default_header);
         }
 
         if (data.hasPhoto()) {

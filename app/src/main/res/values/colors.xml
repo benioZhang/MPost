@@ -16,4 +16,10 @@
     <color name="white">#ffffff</color>
     <color name="green">#2acc21</color>
     <color name="mask">#aa000000</color>
+
+
+    <color name="gray">#ff5c5c5c</color>
+    <color name="light_gray">#ffeeeeee</color>
+    <color name="text_gray">#ff666666</color>
+    <color name="text_green">#ff3bbd79</color>
 </resources>

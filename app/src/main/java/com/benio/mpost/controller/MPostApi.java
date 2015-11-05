@@ -208,6 +208,7 @@ public class MPostApi {
 //        query.findObjects(getContext(), listener);
         BmobQuery<MPost> query = new BmobQuery<>();
         query.addWhereRelatedTo(Column.User.LIKE_RELATION, new BmobPointer(user));
+//        query.addWhereEqualTo(Column.Post.ID, post.getObjectId());
         query.findObjects(getContext(), listener);
     }
 
@@ -340,5 +341,20 @@ public class MPostApi {
     }
 
     private MPostApi() {
+    }
+
+
+    /**
+     * 获取@我的评论
+     * @param user
+     * @param listener
+     */
+    public static void getMyCommentList(MUser user,FindListener<Comment> listener) {
+        BmobQuery<Comment > query = new BmobQuery<>();
+        query.addWhereEqualTo(Column.Comment.TO_USER , new BmobPointer(user));
+        query.include(Column.Comment.FROM_USER +"," + Column.Comment.POST  + "," + Column.Comment.TO_USER);
+        query.setLimit(Constant.QUERY_LIMIT);
+        query.order(Column.Base.REVERSE_CREATED_AT);
+        query.findObjects(AppContext.getInstance(),listener);
     }
 }

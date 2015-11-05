@@ -11,28 +11,48 @@ import cn.bmob.v3.datatype.BmobRelation;
  * Created by benio on 2015/10/10.
  */
 public class MPost extends BmobObject implements Serializable {
-    /** 最大图片数量 */
+    /**
+     * 最大图片数量
+     */
     public static final int MAX_PHOTO_COUNT = 6;
-    /** 最少图片数量 */
+    /**
+     * 最少图片数量
+     */
     public static final int MIN_PHOTO_COUNT = 1;
 
-    /** 内容 */
+    /**
+     * 内容
+     */
     private String content;
-    /** 图片 */
+    /**
+     * 图片
+     */
     private List<String> photoList;
-    /** 作者 */
+    /**
+     * 作者
+     */
     private MUser author;
-    /** 赞的数量 */
+    /**
+     * 赞的数量
+     */
     private Integer likeCount;
-    /** 收藏数量 */
+    /**
+     * 收藏数量
+     */
     private Integer favorCount;
-    /** 保存帖子与赞帖人的关系 */
+    /**
+     * 保存帖子与赞帖人的关系
+     */
     private BmobRelation likeRelation;
 //    /** 保存帖子与收藏人的关系 */
 //    private BmobRelation favorRelation;
-    /** 是否已被收藏 */
+    /**
+     * 是否已被收藏
+     */
     private Boolean isFavored;
-    /** 是否已被赞 */
+    /**
+     * 是否已被赞
+     */
     private Boolean isLiked;
     /**
      * 可见性：公开，私有
@@ -145,4 +165,6 @@ public class MPost extends BmobObject implements Serializable {
                 ", photoList=" + photoList +
                 '}';
     }
+
+
 }

@@ -27,6 +27,7 @@ import com.benio.mpost.util.AKLog;
 import com.benio.mpost.util.AKToast;
 import com.benio.mpost.util.AKView;
 import com.benio.mpost.util.ErrorLog;
+import com.benio.mpost.util.Utils;
 
 import java.util.List;
 
@@ -81,8 +82,12 @@ public class UserDetailActivity extends BaseActivity {
 
             @Override
             public void onSuccess(List<MPost> list) {
-                mUserDetail.setPostList(list);
-                checkReady();
+                if (!Utils.checkListEmpty(list)) {
+                    mUserDetail.setPostList(list);
+                    checkReady();
+                } else {
+                    AKToast.show(UserDetailActivity.this, "还没有发过说说哦～");
+                }
             }
         });
 
@@ -171,9 +176,10 @@ public class UserDetailActivity extends BaseActivity {
      */
     void onFollowUserEvent() {
         MUser me = AppContext.getInstance().getUser();
-//        if (mUserDetail.getUser().equals(me)) {
-//            AKToast.show(this, "不能收藏自己");
-//        }
+        if (mUserDetail.getUser().equals(me)) {
+            AKToast.show(this, "不能收藏自己");
+            return;
+        }
         final boolean follow = !mUserDetail.isFollowing();
         MPostApi.followUser(mUserDetail.getUser(), me, follow, new ResponseListener() {
             @Override
