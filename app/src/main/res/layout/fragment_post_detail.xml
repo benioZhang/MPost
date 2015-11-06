@@ -43,7 +43,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="10dp"
                     android:layout_marginRight="10dp"
-                    android:textColor="?attr/textColor"
+                    android:textColor="#9D9D9D"
                     android:textSize="16sp"
                     tools:text="12"/>
 
@@ -61,7 +61,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="10dp"
                     android:layout_marginRight="10dp"
-                    android:textColor="?attr/textColor"
+                    android:textColor="#9D9D9D"
                     android:textSize="16sp"
                     tools:text="0"/>
 
@@ -72,7 +72,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="10dp"
                     android:layout_marginRight="10dp"
-                    android:src="@mipmap/btn_comment"/>
+                    android:src="@mipmap/timeline_button_comment"/>
             </LinearLayout>
 
             <android.support.v7.widget.RecyclerView

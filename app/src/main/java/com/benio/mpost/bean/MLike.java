@@ -11,15 +11,15 @@ public class MLike extends BmobObject {
     private MUser fromUser;
     private MUser toUser;
     private MPost post;
-    private Integer likeCount;
+//    private Integer likeCount;
 
-    public Integer getLikeCount() {
-        return likeCount;
-    }
-
-    public void setLikeCount(Integer likeCount) {
-        this.likeCount = likeCount;
-    }
+//    public Integer getLikeCount() {
+//        return likeCount;
+//    }
+//
+//    public void setLikeCount(Integer likeCount) {
+//        this.likeCount = likeCount;
+//    }
 
     public MUser getFromUser() {
         return fromUser;

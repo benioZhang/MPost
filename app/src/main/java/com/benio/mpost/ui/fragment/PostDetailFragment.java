@@ -87,7 +87,7 @@ public class PostDetailFragment extends BaseFragment {
         mContentTextView.setText(post.getContent());
         //set author portrait
         if (author.hasPortrait()) {
-            ImageLoader.getInstance(this).load(mAuthorImageView, author.getPortraitUrl(),R.mipmap.user_default_header);
+            ImageLoader.getInstance(this).load(mAuthorImageView, author.getPortraitUrl(), R.mipmap.user_default_header);
         } else {
             ImageLoader.getInstance(this).load(mAuthorImageView, R.mipmap.user_default_header);
         }
@@ -130,7 +130,7 @@ public class PostDetailFragment extends BaseFragment {
             @Override
             public void onSuccess(List<MPost> result) {
 //                mPostDetail.setFavored(isUserInList(user, result));
-                mPostDetail.setFavored(isPostInList(post ,result));
+                mPostDetail.setFavored(isPostInList(post, result));
 //                mPostDetail.setFavored(!Utils.checkListEmpty(result));
                 checkLoadReady();
             }
@@ -229,10 +229,12 @@ public class PostDetailFragment extends BaseFragment {
      */
     @OnClick(R.id.iv_favor)
     void onFavorEvent() {
+        showProgress();
         final boolean favor = !mPostDetail.isFavored();
         MPostApi.favorPost(AppContext.getInstance().getUser(), mPostDetail.getPost(), favor, new ResponseListener() {
             @Override
             public void onFailure(int code, String msg) {
+                hideProgress();
                 showToast(R.string.info_favor_failed);
                 ErrorLog.log(code, msg);
             }
@@ -246,12 +248,14 @@ public class PostDetailFragment extends BaseFragment {
                 MPostApi.updatePostFavoredCount(mPostDetail.getPost(), favor, new ResponseListener() {
                     @Override
                     public void onFailure(int code, String msg) {
+                        hideProgress();
                         showToast(R.string.info_favor_failed);
                         ErrorLog.log(code, msg);
                     }
 
                     @Override
                     public void onSuccess() {
+                        hideProgress();
                         mPostDetail.setFavored(favor);
                         mPostDetail.getPost().increaseFavor(favor ? +1 : -1);//收藏则收藏数+1，否则-1
                         setupFavor();
@@ -267,9 +271,11 @@ public class PostDetailFragment extends BaseFragment {
     @OnClick(R.id.iv_like)
     void onLikeEvent() {
         final boolean like = !mPostDetail.isLiked();
+        showProgress();
         MPostApi.likePost(AppContext.getInstance().getUser(), mPostDetail.getPost(), like, new ResponseListener() {
             @Override
             public void onFailure(int code, String msg) {
+                hideProgress();
                 showToast(R.string.info_like_failed);
                 ErrorLog.log(code, msg);
             }
@@ -283,15 +289,32 @@ public class PostDetailFragment extends BaseFragment {
                 MPostApi.updatePostLikedCount(mPostDetail.getPost(), like, new ResponseListener() {
                     @Override
                     public void onFailure(int code, String msg) {
+                        hideProgress();
                         showToast(R.string.info_like_failed);
                         ErrorLog.log(code, msg);
                     }
 
                     @Override
                     public void onSuccess() {
-                        mPostDetail.setLiked(like);
-                        mPostDetail.getPost().increaseLike(like ? +1 : -1);//赞则赞数+1，否则-1
-                        setupLike();
+//                        mPostDetail.setLiked(like);
+//                        mPostDetail.getPost().increaseLike(like ? +1 : -1);//赞则赞数+1，否则-1
+//                        setupLike();
+                        MPostApi.updateLike(AppContext.getInstance().getUser(), mPostDetail.getPost(), like, new ResponseListener() {
+                            @Override
+                            public void onFailure(int code, String msg) {
+                                hideProgress();
+                                showToast(R.string.info_like_failed);
+                                ErrorLog.log(code, msg);
+                            }
+
+                            @Override
+                            public void onSuccess() {
+                                hideProgress();
+                                mPostDetail.setLiked(like);
+                                mPostDetail.getPost().increaseLike(like ? +1 : -1);//赞则赞数+1，否则-1
+                                setupLike();
+                            }
+                        });
                     }
                 });
             }
@@ -318,6 +341,7 @@ public class PostDetailFragment extends BaseFragment {
 
     /**
      * 检查post是否存在list中
+     *
      * @param post
      * @param list
      * @return
@@ -325,7 +349,7 @@ public class PostDetailFragment extends BaseFragment {
     private boolean isPostInList(MPost post, List<MPost> list) {
         if (list == null || list.size() < 1) return false;
         for (MPost mPost : list) {
-            if (TextUtils.equals(mPost.getObjectId() ,post.getObjectId())) return true;
+            if (TextUtils.equals(mPost.getObjectId(), post.getObjectId())) return true;
         }
         return false;
     }

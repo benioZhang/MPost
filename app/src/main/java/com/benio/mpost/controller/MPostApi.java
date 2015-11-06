@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.benio.mpost.app.AppContext;
 import com.benio.mpost.bean.Comment;
+import com.benio.mpost.bean.MLike;
 import com.benio.mpost.bean.MPost;
 import com.benio.mpost.bean.MUser;
 import com.benio.mpost.consts.Column;
@@ -89,6 +90,14 @@ public class MPostApi {
     public static void updatePostLikedCount(MPost post, boolean isLiked, Response listener) {
         post.increment(Column.Post.LIKE_COUNT, isLiked ? +1 : -1);//点赞数 +1 or -1
         post.update(getContext(), listener.update());
+    }
+
+    public static void updateLike(MUser user , MPost post ,boolean isLiked ,Response listener){
+        MLike mLike = new MLike();
+        mLike.setFromUser(user);
+        mLike.setToUser(post.getAuthor());
+        mLike.setPost(post);
+        mLike.save(getContext(), listener.save());
     }
 
     /**

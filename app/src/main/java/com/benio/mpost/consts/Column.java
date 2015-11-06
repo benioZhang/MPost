@@ -20,7 +20,7 @@ public final class Column {
         String AUTHOR = "author";
         String LIKE_COUNT = "likeCount";
         String FAVOR_COUNT = "favorCount";
-//        String LIKE_RELATION = "likeRelation";
+        //        String LIKE_RELATION = "likeRelation";
 //        String FAVOR_RELATION = "favorRelation";
         String VISIBILITY = "visibility";
     }
@@ -36,6 +36,12 @@ public final class Column {
         String FROM_USER = "fromUser";
         String TO_USER = "toUser";
         String CONTENT = "content";
+        String POST = "post";
+    }
+
+    public interface Like extends Base {
+        String FROM_USER = "fromUser";
+        String TO_USER = "toUser";
         String POST = "post";
     }
 

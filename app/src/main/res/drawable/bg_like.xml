@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@mipmap/btn_like_selected" android:state_selected="true"/>
-    <item android:drawable="@mipmap/btn_like_unselected"/>
+    <item android:drawable="@mipmap/timeline_button_like_1" android:state_selected="true"/>
+    <item android:drawable="@mipmap/timeline_button_like"/>
 </selector>
