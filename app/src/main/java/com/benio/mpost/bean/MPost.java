@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.List;
 
 import cn.bmob.v3.BmobObject;
-import cn.bmob.v3.datatype.BmobRelation;
 
 /**
  * 贴
@@ -40,10 +39,10 @@ public class MPost extends BmobObject implements Serializable {
      * 收藏数量
      */
     private Integer favorCount;
-    /**
-     * 保存帖子与赞帖人的关系
-     */
-    private BmobRelation likeRelation;
+//    /**
+//     * 保存帖子与赞帖人的关系
+//     */
+//    private BmobRelation likeRelation;
 //    /** 保存帖子与收藏人的关系 */
 //    private BmobRelation favorRelation;
     /**
@@ -108,14 +107,14 @@ public class MPost extends BmobObject implements Serializable {
         this.favorCount = favorCount;
     }
 
-    public BmobRelation getLikeRelation() {
-        return likeRelation;
-    }
-
-    public void setLikeRelation(BmobRelation likeRelation) {
-        this.likeRelation = likeRelation;
-    }
-
+//    public BmobRelation getLikeRelation() {
+//        return likeRelation;
+//    }
+//
+//    public void setLikeRelation(BmobRelation likeRelation) {
+//        this.likeRelation = likeRelation;
+//    }
+//
 //    public BmobRelation getFavorRelation() {
 //        return favorRelation;
 //    }

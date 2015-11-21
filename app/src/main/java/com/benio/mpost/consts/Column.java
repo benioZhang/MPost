@@ -19,6 +19,7 @@ public final class Column {
         String PHOTOS = "photoList";
         String AUTHOR = "author";
         String LIKE_COUNT = "likeCount";
+        String REVERSE_LIKE_COUNT = "-likeCount";
         String FAVOR_COUNT = "favorCount";
         //        String LIKE_RELATION = "likeRelation";
 //        String FAVOR_RELATION = "favorRelation";

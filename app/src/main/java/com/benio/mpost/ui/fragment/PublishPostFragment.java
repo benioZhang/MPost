@@ -1,5 +1,6 @@
 package com.benio.mpost.ui.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -198,8 +199,9 @@ public class PublishPostFragment extends RecyclerFragment implements AdapterView
             @Override
             public void onSuccess() {
                 hideProgress();
-                AKLog.d("发帖成功");
+                AKLog.d(getString(R.string.info_publish_post_success));
                 showToast(R.string.info_publish_post_success);
+                getActivity().setResult(Activity.RESULT_OK);
                 getActivity().finish();
             }
 

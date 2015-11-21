@@ -34,11 +34,10 @@ public class Container {
     public static final int POST_VISIBLE = 6;
     /** 帖子详情 */
     public static final int POST_DETAIL = 7;
-    /** 用户详情页面 */
-    public static final int USER_DETAIL = 8;
+
 
     /** 防止使用不是Container的id */
-    @IntDef({LOGIN, REGISTER, ALBUM, PUBLISH_POST, SEARCH, POST_VISIBLE, POST_DETAIL, USER_DETAIL})
+    @IntDef({LOGIN, REGISTER, ALBUM, PUBLISH_POST, SEARCH, POST_VISIBLE, POST_DETAIL})
     public @interface ContainerType {
     }
 
@@ -98,9 +97,6 @@ public class Container {
                 container.title = R.string.title_post_detail;
                 break;
 
-            case USER_DETAIL:
-//                container.clazz = UserDetailFragment.class;
-                break;
             default:
                 break;
         }
