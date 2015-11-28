@@ -57,9 +57,13 @@ public class MPostApi {
      */
     public static void getLikeRankList(FindListener<MPost> listener, long from, long to) {
         BmobQuery<MPost> q1 = new BmobQuery<>();
-        q1.addWhereGreaterThanOrEqualTo(Column.Post.CREATED_AT, new BmobDate(new Date(from)));
+        BmobDate fromDate = new BmobDate(new Date(from));
+        AKLog.d("xxxx", "from date:" + fromDate.getDate());
+        q1.addWhereGreaterThanOrEqualTo(Column.Post.CREATED_AT, fromDate);
         BmobQuery<MPost> q2 = new BmobQuery<>();
-        q2.addWhereLessThanOrEqualTo(Column.Post.CREATED_AT, new BmobDate(new Date(to)));
+        BmobDate toDate = new BmobDate(new Date(to));
+        AKLog.d("xxxx", "to date:" + toDate.getDate());
+        q2.addWhereLessThanOrEqualTo(Column.Post.CREATED_AT, toDate);
 
         List<BmobQuery<MPost>> queries = new ArrayList<>(2);
         queries.add(q1);
@@ -68,9 +72,8 @@ public class MPostApi {
         BmobQuery<MPost> query = new BmobQuery<>();
         query.and(queries);
         query.include(Column.Post.AUTHOR);
-//        query.setCachePolicy(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);
         query.setLimit(Constant.LIKE_RANK_NUM);
-        query.order(Column.Post.REVERSE_LIKE_COUNT + "," + Column.Post.REVERSE_CREATED_AT);
+//        query.order(Column.Post.REVERSE_LIKE_COUNT + "," + Column.Post.REVERSE_CREATED_AT);
         query.findObjects(getContext(), listener);
     }
 

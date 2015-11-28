@@ -13,16 +13,15 @@ import com.benio.mpost.bean.MUser;
 import com.benio.mpost.controller.MPostApi;
 import com.benio.mpost.controller.UIHelper;
 import com.benio.mpost.interf.impl.QueryListener;
-import com.benio.mpost.util.AKLog;
 import com.benio.mpost.util.AKTime;
 import com.benio.mpost.util.ErrorLog;
 
-import java.util.Date;
 import java.util.List;
 
 import butterknife.Bind;
 
 /**
+ * 点赞榜
  * Created by benio on 2015/11/8.
  */
 public class LikeRankFragment extends RecyclerFragment implements TabLayout.OnTabSelectedListener {
@@ -64,8 +63,6 @@ public class LikeRankFragment extends RecyclerFragment implements TabLayout.OnTa
         @Override
         public void onSuccess(List<MPost> list) {
             hideProgress();
-
-            AKLog.d("xxxx", "like rank " + list.toString());
             if (null == mAdapter) {
                 mAdapter = new LikeRankAdapter(getActivity(), list);
                 mAdapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -111,7 +108,6 @@ public class LikeRankFragment extends RecyclerFragment implements TabLayout.OnTa
 
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
-        showToast(tab.getText() + " is clicked");
         int pos = tab.getPosition();
         long from = 0, to = 0;
         switch (pos) {
@@ -120,22 +116,20 @@ public class LikeRankFragment extends RecyclerFragment implements TabLayout.OnTa
                 break;
 
             case 1://一周
-                from = System.currentTimeMillis();
-                to = AKTime.getMillisDaysBefore(from, 7);
+                to = System.currentTimeMillis();
+                from = AKTime.getMillisDaysBefore(to, 7);
                 getLikeRankList(from, to);
                 break;
 
             case 2://今天
-                from = System.currentTimeMillis();
-                to = AKTime.getMillisDaysBefore(from, 1);
+                to = System.currentTimeMillis();
+                from = AKTime.getMillisDaysBefore(to, 1);
                 getLikeRankList(from, to);
                 break;
 
             default:
                 break;
         }
-        AKLog.d("xxxxxxxx", "from :" + new Date(from).toString() + " to " + new Date(to).toString());
-
     }
 
     @Override
