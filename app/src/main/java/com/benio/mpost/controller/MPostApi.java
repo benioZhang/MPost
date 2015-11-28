@@ -301,10 +301,12 @@ public class MPostApi {
      *
      * @param listener
      */
-    public static void getPostList(final FindListener<MPost> listener) {
+    public static void getPostList(final FindListener<MPost> listener, int page) {
         BmobQuery<MPost> query = new BmobQuery<>();
         query.include(Column.Post.AUTHOR);
-        query.setLimit(Constant.QUERY_LIMIT);
+        int num = Constant.QUERY_LIMIT;
+        query.setSkip(page * num);
+        query.setLimit(num);
         query.order(Column.Post.REVERSE_CREATED_AT);
 //        query.setCachePolicy(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);    // 先从缓存获取数据，如果没有，再从网络获取。
         query.findObjects(getContext(), listener);
