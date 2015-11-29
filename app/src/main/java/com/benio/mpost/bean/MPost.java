@@ -77,11 +77,11 @@ public class MPost extends BmobObject implements Serializable {
         this.author = author;
     }
 
-    public Integer getLikeCount() {
+    public int getLikeCount() {
         return likeCount;
     }
 
-    public void setLikeCount(Integer likeCount) {
+    public void setLikeCount(int likeCount) {
         this.likeCount = likeCount;
     }
 
@@ -93,11 +93,11 @@ public class MPost extends BmobObject implements Serializable {
         this.favorCount += count;
     }
 
-    public Integer getFavorCount() {
+    public int getFavorCount() {
         return favorCount;
     }
 
-    public void setFavorCount(Integer favorCount) {
+    public void setFavorCount(int favorCount) {
         this.favorCount = favorCount;
     }
 

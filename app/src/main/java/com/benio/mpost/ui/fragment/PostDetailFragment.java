@@ -2,7 +2,6 @@ package com.benio.mpost.ui.fragment;
 
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -25,6 +24,7 @@ import com.benio.mpost.network.ImageLoader;
 import com.benio.mpost.util.AKLog;
 import com.benio.mpost.util.AKView;
 import com.benio.mpost.util.ErrorLog;
+import com.benio.mpost.util.Utils;
 import com.benio.mpost.widget.FullyGridLayoutManager;
 import com.benio.mpost.widget.FullyLinearLayoutManager;
 
@@ -92,7 +92,6 @@ public class PostDetailFragment extends BaseFragment {
             ImageLoader.getInstance(this).load(mAuthorImageView, R.mipmap.user_default_header);
         }
 
-        AKLog.d("xxxx", "photo list :" + post.getPhotoList().toString());
         // set mPostDetail photos
         if (post.hasPhoto()) {
             int spanCount = getResources().getInteger(R.integer.thumbnail_span_count);
@@ -129,7 +128,7 @@ public class PostDetailFragment extends BaseFragment {
         MPostApi.isFavoredPost(user, post, new QueryListener<MPost>() {
             @Override
             public void onSuccess(List<MPost> result) {
-                mPostDetail.setFavored(isPostInList(post, result));
+                mPostDetail.setFavored(Utils.isPostInList(post, result));
                 checkLoadReady();
             }
 
@@ -145,7 +144,7 @@ public class PostDetailFragment extends BaseFragment {
         MPostApi.isLikedPost(user, post, new QueryListener<MPost>() {
             @Override
             public void onSuccess(List<MPost> result) {
-                mPostDetail.setLiked(isPostInList(post, result));
+                mPostDetail.setLiked(Utils.isPostInList(post, result));
                 checkLoadReady();
             }
 
@@ -161,7 +160,6 @@ public class PostDetailFragment extends BaseFragment {
         MPostApi.getCommentList(post, new QueryListener<Comment>() {
             @Override
             public void onSuccess(List<Comment> list) {
-                AKLog.d("xxx", "comment list: " + list.toString());
                 mPostDetail.setCommentList(list);
                 checkLoadReady();
             }
@@ -269,22 +267,6 @@ public class PostDetailFragment extends BaseFragment {
             }
         });
     }
-
-    /**
-     * 检查post是否存在list中
-     *
-     * @param post
-     * @param list
-     * @return
-     */
-    private boolean isPostInList(MPost post, List<MPost> list) {
-        if (list == null || list.isEmpty()) return false;
-        for (MPost mPost : list) {
-            if (TextUtils.equals(mPost.getObjectId(), post.getObjectId())) return true;
-        }
-        return false;
-    }
-
 
     /**
      * 检查是否已经加载完成

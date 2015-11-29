@@ -51,7 +51,7 @@ public class TimeLineAdapter extends BaseRecyclerAdapter<MPost> {
             holder.getView(R.id.tv_item_favor_count).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mOnFavorPostListener.onFavorPost(getItem(holder.getLayoutPosition()));
+                    mOnFavorPostListener.onFavorPost(v, getItem(holder.getLayoutPosition()));
                 }
             });
         }
@@ -59,7 +59,7 @@ public class TimeLineAdapter extends BaseRecyclerAdapter<MPost> {
             holder.getView(R.id.tv_item_like_count).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mOnLikePostListener.onLikePost(getItem(holder.getLayoutPosition()));
+                    mOnLikePostListener.onLikePost(v, getItem(holder.getLayoutPosition()));
                 }
             });
         }
@@ -107,6 +107,7 @@ public class TimeLineAdapter extends BaseRecyclerAdapter<MPost> {
         }
         holder.getTextView(R.id.tv_item_favor_count).setText("" + data.getFavorCount());
         holder.getTextView(R.id.tv_item_like_count).setText("" + data.getLikeCount());
+        holder.getView(R.id.recycler_view).setEnabled(false);
     }
 
     private OnFavorPostListener mOnFavorPostListener;
@@ -130,10 +131,10 @@ public class TimeLineAdapter extends BaseRecyclerAdapter<MPost> {
     }
 
     public interface OnLikePostListener {
-        void onLikePost(MPost post);
+        void onLikePost(View view, MPost post);
     }
 
     public interface OnFavorPostListener {
-        void onFavorPost(MPost post);
+        void onFavorPost(View view, MPost post);
     }
 }
