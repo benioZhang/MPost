@@ -34,25 +34,19 @@ public class MPost extends BmobObject implements Serializable {
     /**
      * 赞的数量
      */
-    private Integer likeCount;
+    private int likeCount;
     /**
      * 收藏数量
      */
-    private Integer favorCount;
-//    /**
-//     * 保存帖子与赞帖人的关系
-//     */
-//    private BmobRelation likeRelation;
-//    /** 保存帖子与收藏人的关系 */
-//    private BmobRelation favorRelation;
+    private int favorCount;
     /**
      * 是否已被收藏
      */
-    private Boolean isFavored;
+    private boolean isFavored;
     /**
      * 是否已被赞
      */
-    private Boolean isLiked;
+    private boolean isLiked;
     /**
      * 可见性：公开，私有
      * {@link PostVisibility}
@@ -107,43 +101,27 @@ public class MPost extends BmobObject implements Serializable {
         this.favorCount = favorCount;
     }
 
-//    public BmobRelation getLikeRelation() {
-//        return likeRelation;
-//    }
-//
-//    public void setLikeRelation(BmobRelation likeRelation) {
-//        this.likeRelation = likeRelation;
-//    }
-//
-//    public BmobRelation getFavorRelation() {
-//        return favorRelation;
-//    }
-//
-//    public void setFavorRelation(BmobRelation favorRelation) {
-//        this.favorRelation = favorRelation;
-//    }
-
-    public Boolean isFavored() {
+    public boolean isFavored() {
         return isFavored;
     }
 
-    public void setFavored(Boolean isFavored) {
+    public void setFavored(boolean isFavored) {
         this.isFavored = isFavored;
     }
 
-    public Boolean isLiked() {
+    public boolean isLiked() {
         return isLiked;
     }
 
-    public void setLiked(Boolean isLiked) {
+    public void setLiked(boolean isLiked) {
         this.isLiked = isLiked;
     }
 
-    public Integer getVisibility() {
+    public int getVisibility() {
         return visibility;
     }
 
-    public void setVisibility(Integer visibility) {
+    public void setVisibility(int visibility) {
         this.visibility = visibility;
     }
 

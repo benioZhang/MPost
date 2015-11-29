@@ -10,6 +10,7 @@ import com.benio.mpost.bean.MUser;
 import com.benio.mpost.consts.Column;
 import com.benio.mpost.consts.Constant;
 import com.benio.mpost.interf.Response;
+import com.benio.mpost.interf.impl.ResponseListener;
 import com.benio.mpost.interf.impl.UploadFilesListener;
 import com.benio.mpost.util.AKLog;
 
@@ -107,24 +108,26 @@ public class MPostApi {
      * @param isLiked
      * @param listener
      */
-    public static void likePost(final MUser user, final MPost post, boolean isLiked, Response listener) {
-//        BmobRelation relation = new BmobRelation();
-//        if (isLiked) {
-//            relation.add(user);
-//        } else {
-//            relation.remove(user);
-//        }
-//        post.setLikeRelation(relation);
-//        post.increment(Column.Post.LIKE_COUNT, isLiked ? 1 : -1);//赞数 +1 or -1
-//        post.update(getContext(), listener.update());
+    public static void likePost(final MUser user, final MPost post, final boolean isLiked, final Response listener) {
         BmobRelation relation = new BmobRelation();
         if (isLiked) {
             relation.add(post);
         } else {
-            relation.remove(user);
+            relation.remove(post);
         }
         user.setLikeRelation(relation);
-        user.update(getContext(), listener.update());
+        user.update(getContext(), new ResponseListener() {
+
+            @Override
+            public void onFailure(int code, String msg) {
+                listener.onFailure(code, msg);
+            }
+
+            @Override
+            public void onSuccess() {
+                updatePostLikedCount(post, isLiked, listener);
+            }
+        }.update());
     }
 
     /**
@@ -170,16 +173,7 @@ public class MPostApi {
      * @param post
      * @param listener
      */
-    public static void favorPost(final MUser user, final MPost post, boolean isFavored, Response listener) {
-//        BmobRelation favorRelation = new BmobRelation();
-//        if (isFavored) {
-//            favorRelation.add(user);
-//        } else {
-//            favorRelation.remove(user);
-//        }
-//        post.setFavorRelation(favorRelation);
-//        post.increment(Column.Post.FAVOR_COUNT, isFavored ? +1 : -1);//收藏数 +1 or -1
-//        post.update(getContext(), listener.update());
+    public static void favorPost(final MUser user, final MPost post, final boolean isFavored, final Response listener) {
         BmobRelation favorRelation = new BmobRelation();
         if (isFavored) {
             favorRelation.add(post);
@@ -187,7 +181,19 @@ public class MPostApi {
             favorRelation.remove(post);
         }
         user.setFavRelation(favorRelation);
-        user.update(getContext(), listener.update());
+        user.update(getContext(), new ResponseListener() {
+
+            @Override
+            public void onFailure(int code, String msg) {
+                listener.onFailure(code, msg);
+            }
+
+            @Override
+            public void onSuccess() {
+                /** 更新post表fav数 **/
+                updatePostFavoredCount(post, isFavored, listener);
+            }
+        }.update());
     }
 
     /**
@@ -202,19 +208,20 @@ public class MPostApi {
         post.update(getContext(), listener.update());
     }
 
-
     /**
      * 显示个人收藏post
      *
      * @param user
      * @param listener
      */
-    public static void getMyFavouritePost(MUser user, FindListener<MPost> listener) {
+    public static void getMyFavouritePost(MUser user, FindListener<MPost> listener, int page) {
         BmobQuery<MPost> query = new BmobQuery<>();
         query.addWhereRelatedTo(Column.User.FAV_RELATION, new BmobPointer(user));
         query.include(Column.Post.AUTHOR);
         query.order(Column.Post.REVERSE_CREATED_AT);
-        query.setLimit(Constant.QUERY_LIMIT);
+        int num = Constant.QUERY_LIMIT;
+        query.setSkip(page * num);
+        query.setLimit(num);
         query.findObjects(getContext(), listener);
     }
 
@@ -259,12 +266,8 @@ public class MPostApi {
      * @param listener
      */
     public static void isLikedPost(final MUser user, final MPost post, final FindListener<MPost> listener) {
-//        BmobQuery<MUser> query = new BmobQuery<>();
-//        query.addWhereRelatedTo(Column.Post.LIKE_RELATION, new BmobPointer(post));
-//        query.findObjects(getContext(), listener);
         BmobQuery<MPost> query = new BmobQuery<>();
         query.addWhereRelatedTo(Column.User.LIKE_RELATION, new BmobPointer(user));
-//        query.addWhereEqualTo(Column.Post.ID, post.getObjectId());
         query.findObjects(getContext(), listener);
     }
 
@@ -288,9 +291,6 @@ public class MPostApi {
      * @param post
      */
     public static void isFavoredPost(final MUser user, final MPost post, final FindListener<MPost> listener) {
-//        BmobQuery<MUser> query = new BmobQuery<>();
-//        query.addWhereRelatedTo(Column.Post.FAVOR_RELATION, new BmobPointer(post));
-//        query.findObjects(getContext(), listener);
         BmobQuery<MPost> query = new BmobQuery<>();
         query.addWhereRelatedTo(Column.User.FAV_RELATION, new BmobPointer(user));
         query.findObjects(getContext(), listener);

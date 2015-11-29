@@ -1,7 +1,5 @@
 package com.benio.mpost.bean;
 
-import com.benio.mpost.util.AKLog;
-
 import java.util.List;
 
 /**
@@ -11,9 +9,9 @@ public class PostDetail {
     /** 帖子 */
     private MPost post;
     /** 是否已被收藏 */
-    private Boolean isFavored;
+    private boolean isFavored;
     /** 是否已被赞 */
-    private Boolean isLiked;
+    private boolean isLiked;
     /** 评论列表 */
     private List<Comment> commentList;
     /**
@@ -33,20 +31,20 @@ public class PostDetail {
         increaseReady();
     }
 
-    public Boolean isFavored() {
+    public boolean isFavored() {
         return isFavored;
     }
 
-    public void setFavored(Boolean isFavored) {
+    public void setFavored(boolean isFavored) {
         this.isFavored = isFavored;
         increaseReady();
     }
 
-    public Boolean isLiked() {
+    public boolean isLiked() {
         return isLiked;
     }
 
-    public void setLiked(Boolean isLiked) {
+    public void setLiked(boolean isLiked) {
         this.isLiked = isLiked;
         increaseReady();
     }
@@ -75,6 +73,6 @@ public class PostDetail {
         synchronized (this) {
             this.readyCount++;
         }
-        AKLog.i("xxxx", "readyCount: " + readyCount);
+//        AKLog.i("xxxx", "readyCount: " + readyCount);
     }
 }

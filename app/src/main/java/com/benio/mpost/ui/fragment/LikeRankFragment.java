@@ -6,7 +6,6 @@ import android.widget.AdapterView;
 
 import com.benio.mpost.R;
 import com.benio.mpost.adapter.BaseRecyclerAdapter;
-import com.benio.mpost.adapter.LikeRankAdapter;
 import com.benio.mpost.adapter.TimeLineAdapter;
 import com.benio.mpost.bean.MPost;
 import com.benio.mpost.bean.MUser;
@@ -29,7 +28,7 @@ public class LikeRankFragment extends RecyclerFragment implements TabLayout.OnTa
     @Bind(R.id.tab_layout)
     TabLayout mTabLayout;
 
-    LikeRankAdapter mAdapter;
+    TimeLineAdapter mAdapter;
 
     @Override
     public int getContentResource() {
@@ -64,7 +63,7 @@ public class LikeRankFragment extends RecyclerFragment implements TabLayout.OnTa
         public void onSuccess(List<MPost> list) {
             hideProgress();
             if (null == mAdapter) {
-                mAdapter = new LikeRankAdapter(getActivity(), list);
+                mAdapter = new TimeLineAdapter(getActivity(), list);
                 mAdapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

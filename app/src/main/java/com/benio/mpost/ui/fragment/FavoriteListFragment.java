@@ -1,99 +1,53 @@
 package com.benio.mpost.ui.fragment;
 
-import android.os.Handler;
-import android.os.Message;
-import android.view.View;
-import android.widget.AdapterView;
-
 import com.benio.mpost.R;
-import com.benio.mpost.adapter.BaseRecyclerAdapter;
-import com.benio.mpost.adapter.TimeLineAdapter;
 import com.benio.mpost.app.AppContext;
 import com.benio.mpost.bean.MPost;
-import com.benio.mpost.bean.MUser;
 import com.benio.mpost.controller.MPostApi;
-import com.benio.mpost.controller.UIHelper;
 import com.benio.mpost.interf.impl.QueryListener;
-import com.benio.mpost.util.AKToast;
+import com.benio.mpost.util.AKLog;
 import com.benio.mpost.util.ErrorLog;
 import com.benio.mpost.util.Utils;
+import com.benio.mpost.widget.SwipeRefreshLayout;
 
 import java.util.List;
 
 /**
+ * 收藏列表
  * Created by shau-lok on 11/5/15.
  */
-public class FavoriteListFragment extends RefreshRecyclerFragment{
-
-    private TimeLineAdapter mAdapter;
-
-    @Override
-    public BaseRecyclerAdapter onCreateAdapter() {
-        return null;
-    }
-
-    @Override
-    public void onLoad() {
-        setLoadingState(true);
-        new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                setLoadingState(false);
-                AKToast.show(getActivity(), "加载更多");
-            }
-        }.sendEmptyMessageDelayed(1, 2000);
-        getPostList();
-    }
-
-    @Override
-    public void onRefresh() {
-        setRefreshingState(true);
-        new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                setRefreshingState(false);
-//                AKToast.show(getActivity(), "下拉刷新");
-            }
-        }.sendEmptyMessageDelayed(1, 2000);
-        getPostList();
-    }
-
-    @Override
-    protected void initData() {
-        super.initData();
-        getPostList();
-    }
+public class FavoriteListFragment extends TimeLineFragment {
 
     void getPostList() {
-        MPostApi.getMyFavouritePost(AppContext.getInstance().getUser(),new QueryListener<MPost>() {
+        MPostApi.getMyFavouritePost(AppContext.getInstance().getUser(), new QueryListener<MPost>() {
             @Override
             public void onFailure(int code, String msg) {
                 ErrorLog.log(code, msg);
                 showToast(R.string.info_access_error);
+                setRefreshingState(false);
+                setLoadingState(false);
             }
 
             @Override
             public void onSuccess(List<MPost> list) {
+                AKLog.d("xxx", "timeLine :" + list.toString());
                 if (!Utils.checkListEmpty(list)) {
-                    mAdapter = new TimeLineAdapter(getActivity(), list);
-                    mAdapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            UIHelper.showPostDetail(getActivity(), mAdapter.getItem(position));
-                        }
-                    });
-                    mAdapter.setOnAuthorClickListener(new TimeLineAdapter.OnAuthorClickListener() {
-                        @Override
-                        public void onAuthorClick(MUser author) {
-                            UIHelper.showUserDetail(getActivity(), author);
-                        }
-                    });
-                    setAdapter(mAdapter);
+                    SwipeRefreshLayout refreshLayout = getRefreshLayout();
+                    if (refreshLayout.isLoading()) {
+                        AKLog.d("xxx", "isLoading ");
+                        setLoadingState(false);
+                        getTimeLineAdapter().addAll(list);
+                    } else {
+                        AKLog.d("xxx", "isRefreshing ");
+                        setRefreshingState(false);
+                        getTimeLineAdapter().setData(list);
+                    }
                 } else {
-                    showToast("还没有收藏过哦～");
+                    setRefreshingState(false);
+                    setLoadingState(false);
+                    showToast("没有数据~~");
                 }
             }
-        });
+        }, mPage);
     }
-
 }

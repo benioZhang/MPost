@@ -26,7 +26,7 @@ import java.util.List;
 public class TimeLineFragment extends RefreshRecyclerFragment {
 
     private TimeLineAdapter mAdapter;
-    private int mPage;
+    protected int mPage;
     private Handler mHandler = new Handler();
     private Runnable mRunnable = new Runnable() {
         @Override
@@ -84,11 +84,11 @@ public class TimeLineFragment extends RefreshRecyclerFragment {
                     if (refreshLayout.isLoading()) {
                         AKLog.d("xxx", "isLoading ");
                         setLoadingState(false);
-                        getAdapter().addAll(list);
+                        getTimeLineAdapter().addAll(list);
                     } else {
                         AKLog.d("xxx", "isRefreshing ");
                         setRefreshingState(false);
-                        getAdapter().setData(list);
+                        getTimeLineAdapter().setData(list);
                     }
                 } else {
                     setRefreshingState(false);
@@ -100,7 +100,7 @@ public class TimeLineFragment extends RefreshRecyclerFragment {
     }
 
 
-    private TimeLineAdapter getAdapter() {
+    protected TimeLineAdapter getTimeLineAdapter() {
         if (null == mAdapter) {
             mAdapter = new TimeLineAdapter(getActivity());
             mAdapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -115,9 +115,22 @@ public class TimeLineFragment extends RefreshRecyclerFragment {
                     UIHelper.showUserDetail(getActivity(), author);
                 }
             });
+            mAdapter.setOnFavorPostListener(new TimeLineAdapter.OnFavorPostListener() {
+                @Override
+                public void onFavorPost(MPost post) {
+
+                }
+            });
             setAdapter(mAdapter);
         }
         return mAdapter;
     }
 
+    private void likePost(MPost post) {
+
+    }
+
+    private void favorPost(MPost post) {
+
+    }
 }
