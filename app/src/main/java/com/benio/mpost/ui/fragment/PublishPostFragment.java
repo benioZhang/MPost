@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,6 +24,7 @@ import com.benio.mpost.controller.MPostApi;
 import com.benio.mpost.controller.UIHelper;
 import com.benio.mpost.interf.impl.ResponseListener;
 import com.benio.mpost.util.AKLog;
+import com.benio.mpost.util.AKToast;
 import com.benio.mpost.util.AKView;
 import com.benio.mpost.widget.DividerGridItemDecoration;
 
@@ -194,21 +196,26 @@ public class PublishPostFragment extends RecyclerFragment implements AdapterView
         String content = AKView.getText(mPostContentEditText);
         MUser author = AppContext.getInstance().getUser();
 
-        MPostApi.publishPost(author, content, mPostPhotoList, mVisibility, new ResponseListener() {
-            @Override
-            public void onSuccess() {
-                hideProgress();
-                AKLog.d("发帖成功");
-                showToast(R.string.info_publish_post_success);
-                getActivity().finish();
-            }
+        Log.d("jsjsjsjsjs", author.toString());
+        if (author.getCanNotPost()!=null && author.getCanNotPost()) {
+            AKToast.show(getActivity(), "你被禁止发帖，解封请联系管理员");
+        } else {
+            MPostApi.publishPost(author, content, mPostPhotoList, mVisibility, new ResponseListener() {
+                @Override
+                public void onSuccess() {
+                    hideProgress();
+                    AKLog.d("发帖成功");
+                    showToast(R.string.info_publish_post_success);
+                    getActivity().finish();
+                }
 
-            @Override
-            public void onFailure(int code, String msg) {
-                AKLog.d("失败 " + "code " + code + "  msg  " + msg);
-                showToast(R.string.info_publish_post_failure);
-            }
-        });
+                @Override
+                public void onFailure(int code, String msg) {
+                    AKLog.d("失败 " + "code " + code + "  msg  " + msg);
+                    showToast(R.string.info_publish_post_failure);
+                }
+            });
+        }
     }
 
 }

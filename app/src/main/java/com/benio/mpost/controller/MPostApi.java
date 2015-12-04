@@ -328,6 +328,7 @@ public class MPostApi {
         user.setUsername(account);
         user.setPassword(password);
         user.setName(account);
+        user.setCanNotPost(false);
         user.signUp(getContext(), listener.save());
     }
 
