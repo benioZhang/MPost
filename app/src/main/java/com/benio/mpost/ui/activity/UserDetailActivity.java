@@ -71,43 +71,55 @@ public class UserDetailActivity extends BaseActivity {
         mUserDetail = new UserDetail();
         mUserDetail.setUser(user);
 
-        MPostApi.getUserPostList(user, new QueryListener<MPost>() {
-            @Override
-            public void onFailure(int code, String msg) {
-                ErrorLog.log(code, msg);
-                AKToast.show(UserDetailActivity.this, R.string.info_access_error);
-                mUserDetail.setPostList(null);
-                checkReady();
-            }
-
-            @Override
-            public void onSuccess(List<MPost> list) {
-                if (!Utils.checkListEmpty(list)) {
-                    mUserDetail.setPostList(list);
+        if (user.getCanNotPost() != null && user.getCanNotPost()) {
+            hideProgress();
+            removeAllViews();
+            AKToast.show(getBaseContext(), "你被禁止状态，无法查看内容，解封请联系管理员");
+        } else {
+            MPostApi.getUserPostList(user, new QueryListener<MPost>() {
+                @Override
+                public void onFailure(int code, String msg) {
+                    ErrorLog.log(code, msg);
+                    AKToast.show(UserDetailActivity.this, R.string.info_access_error);
+                    mUserDetail.setPostList(null);
                     checkReady();
-                } else {
-                    AKToast.show(UserDetailActivity.this, "还没有发过说说哦～");
                 }
-            }
-        });
 
-        final MUser me = AppContext.getInstance().getUser();
-        MPostApi.isFollowingUser(user, me, new QueryListener<MUser>() {
-            @Override
-            public void onFailure(int code, String msg) {
-                ErrorLog.log(code, msg);
-                AKToast.show(UserDetailActivity.this, R.string.info_access_error);
-                mUserDetail.setFollowing(false);
-                checkReady();
-            }
+                @Override
+                public void onSuccess(List<MPost> list) {
+                    if (!Utils.checkListEmpty(list)) {
+                        mUserDetail.setPostList(list);
+                        checkReady();
+                    } else {
+                        AKToast.show(UserDetailActivity.this, "还没有发过说说哦～");
+                    }
+                }
+            });
 
-            @Override
-            public void onSuccess(List<MUser> list) {
-                AKLog.d("xxxxx", "result list: " + list.toString());
-                mUserDetail.setFollowing(isUserInList(user, list));
-                checkReady();
-            }
-        });
+
+            final MUser me = AppContext.getInstance().getUser();
+            MPostApi.isFollowingUser(user, me, new QueryListener<MUser>() {
+                @Override
+                public void onFailure(int code, String msg) {
+                    ErrorLog.log(code, msg);
+                    AKToast.show(UserDetailActivity.this, R.string.info_access_error);
+                    mUserDetail.setFollowing(false);
+                    checkReady();
+                }
+
+                @Override
+                public void onSuccess(List<MUser> list) {
+                    AKLog.d("xxxxx", "result list: " + list.toString());
+                    mUserDetail.setFollowing(isUserInList(user, list));
+                    checkReady();
+                }
+            });
+        }
+    }
+
+    private void removeAllViews() {
+        mRecyclerView.setVisibility(View.GONE);
+        mFloatingActionButton.setVisibility(View.GONE);
     }
 
     /**

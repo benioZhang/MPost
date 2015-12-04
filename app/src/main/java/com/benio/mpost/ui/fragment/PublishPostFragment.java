@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -198,7 +197,9 @@ public class PublishPostFragment extends RecyclerFragment implements AdapterView
         MUser author = AppContext.getInstance().getUser();
 
         if (author.getCanNotPost() != null && author.getCanNotPost()) {
+            hideProgress();
             AKToast.show(getActivity(), "你被禁止发帖，解封请联系管理员");
+            getActivity().finish();
         } else {
             MPostApi.publishPost(author, content, mPostPhotoList, mVisibility, new ResponseListener() {
                 @Override
