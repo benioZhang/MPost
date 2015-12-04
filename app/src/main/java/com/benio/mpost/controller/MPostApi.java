@@ -13,10 +13,13 @@ import com.benio.mpost.interf.Response;
 import com.benio.mpost.interf.impl.UploadFilesListener;
 import com.benio.mpost.util.AKLog;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.datatype.BmobDate;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.datatype.BmobPointer;
 import cn.bmob.v3.datatype.BmobRelation;
@@ -29,6 +32,50 @@ import cn.bmob.v3.listener.FindListener;
 public class MPostApi {
 
     static final String TAG = MPostApi.class.getSimpleName();
+
+    /**
+     * 获取点赞榜列表
+     *
+     * @param listener
+     */
+    public static void getLikeRankList(FindListener<MPost> listener) {
+        BmobQuery<MPost> query = new BmobQuery<>();
+        query.include(Column.Post.AUTHOR);
+//        query.setCachePolicy(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);
+        query.setLimit(Constant.LIKE_RANK_NUM);
+        query.order(Column.Post.REVERSE_LIKE_COUNT + "," + Column.Post.REVERSE_CREATED_AT);
+        query.findObjects(getContext(), listener);
+    }
+
+    /**
+     * 获取点赞榜列表
+     * 全部，一周，今天内
+     *
+     * @param listener
+     * @param from     开始时间戳
+     * @param to       截止时间戳
+     */
+    public static void getLikeRankList(FindListener<MPost> listener, long from, long to) {
+        BmobQuery<MPost> q1 = new BmobQuery<>();
+        BmobDate fromDate = new BmobDate(new Date(from));
+        AKLog.d("xxxx", "from date:" + fromDate.getDate());
+        q1.addWhereGreaterThanOrEqualTo(Column.Post.CREATED_AT, fromDate);
+        BmobQuery<MPost> q2 = new BmobQuery<>();
+        BmobDate toDate = new BmobDate(new Date(to));
+        AKLog.d("xxxx", "to date:" + toDate.getDate());
+        q2.addWhereLessThanOrEqualTo(Column.Post.CREATED_AT, toDate);
+
+        List<BmobQuery<MPost>> queries = new ArrayList<>(2);
+        queries.add(q1);
+        queries.add(q2);
+
+        BmobQuery<MPost> query = new BmobQuery<>();
+        query.and(queries);
+        query.include(Column.Post.AUTHOR);
+        query.setLimit(Constant.LIKE_RANK_NUM);
+//        query.order(Column.Post.REVERSE_LIKE_COUNT + "," + Column.Post.REVERSE_CREATED_AT);
+        query.findObjects(getContext(), listener);
+    }
 
     /**
      * 获取用户的发帖列表
@@ -92,7 +139,7 @@ public class MPostApi {
         post.update(getContext(), listener.update());
     }
 
-    public static void updateLike(MUser user , MPost post ,boolean isLiked ,Response listener){
+    public static void updateLike(MUser user, MPost post, boolean isLiked, Response listener) {
         MLike mLike = new MLike();
         mLike.setFromUser(user);
         mLike.setToUser(post.getAuthor());
@@ -254,10 +301,12 @@ public class MPostApi {
      *
      * @param listener
      */
-    public static void getPostList(final FindListener<MPost> listener) {
+    public static void getPostList(final FindListener<MPost> listener, int page) {
         BmobQuery<MPost> query = new BmobQuery<>();
         query.include(Column.Post.AUTHOR);
-        query.setLimit(Constant.QUERY_LIMIT);
+        int num = Constant.QUERY_LIMIT;
+        query.setSkip(page * num);
+        query.setLimit(num);
         query.order(Column.Post.REVERSE_CREATED_AT);
 //        query.setCachePolicy(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);    // 先从缓存获取数据，如果没有，再从网络获取。
         query.findObjects(getContext(), listener);
@@ -356,15 +405,16 @@ public class MPostApi {
 
     /**
      * 获取@我的评论
+     *
      * @param user
      * @param listener
      */
-    public static void getMyCommentList(MUser user,FindListener<Comment> listener) {
-        BmobQuery<Comment > query = new BmobQuery<>();
-        query.addWhereEqualTo(Column.Comment.TO_USER , new BmobPointer(user));
-        query.include(Column.Comment.FROM_USER +"," + Column.Comment.POST  + "," + Column.Comment.TO_USER);
+    public static void getMyCommentList(MUser user, FindListener<Comment> listener) {
+        BmobQuery<Comment> query = new BmobQuery<>();
+        query.addWhereEqualTo(Column.Comment.TO_USER, new BmobPointer(user));
+        query.include(Column.Comment.FROM_USER + "," + Column.Comment.POST + "," + Column.Comment.TO_USER);
         query.setLimit(Constant.QUERY_LIMIT);
         query.order(Column.Base.REVERSE_CREATED_AT);
-        query.findObjects(AppContext.getInstance(),listener);
+        query.findObjects(AppContext.getInstance(), listener);
     }
 }

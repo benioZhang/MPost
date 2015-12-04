@@ -10,7 +10,6 @@ import com.benio.mpost.bean.MPost;
 import com.benio.mpost.bean.MUser;
 import com.benio.mpost.bean.RecyclerHolder;
 import com.benio.mpost.network.ImageLoader;
-import com.benio.mpost.util.AKLog;
 import com.benio.mpost.widget.FullyGridLayoutManager;
 
 import java.util.List;
@@ -63,7 +62,7 @@ public class TimeLineAdapter extends BaseRecyclerAdapter<MPost> {
             //使用ViewHolder写法，避免频繁创建实例
             ThumbnailAdapter adapter = (ThumbnailAdapter) holder.itemView.getTag(R.id.adapter_tag);
             List<String> photoList = data.getPhotoList();
-            AKLog.d("xxxx", photoList.toString());
+//            AKLog.d("xxxx", photoList.toString());
             if (null == adapter) {
                 adapter = new ThumbnailAdapter(getContext(), photoList);
                 holder.itemView.setTag(R.id.adapter_tag, adapter);

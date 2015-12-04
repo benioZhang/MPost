@@ -1,5 +1,6 @@
 package com.benio.mpost.ui.activity;
 
+import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -18,8 +19,9 @@ import com.benio.mpost.controller.UIHelper;
 import com.benio.mpost.network.ImageLoader;
 import com.benio.mpost.ui.fragment.CommentListFragment;
 import com.benio.mpost.ui.fragment.FavoriteListFragment;
+import com.benio.mpost.ui.fragment.LikeRankFragment;
 import com.benio.mpost.ui.fragment.TimeLineFragment;
-import com.benio.mpost.util.AKToast;
+import com.benio.mpost.util.AKLog;
 import com.benio.mpost.util.AKView;
 
 import java.lang.ref.WeakReference;
@@ -28,6 +30,9 @@ import butterknife.Bind;
 import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    private static final int REQUEST_PUBLISH_POST = 1;
+
     @Bind(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
     @Bind(R.id.navigation_view)
@@ -65,7 +70,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
             //发帖
             case R.id.action_publish_post:
-                UIHelper.showPublishPostForResult(this, 0x001);
+//                Intent intent = FragmentContainerActivity.newIntent(this, Container.PUBLISH_POST, null);
+//                startActivityForResult(intent, REQUEST_PUBLISH_POST);
+                UIHelper.showPublishPostForResult(this, REQUEST_PUBLISH_POST);
                 return true;
 
             default:
@@ -77,25 +84,22 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
         int id = menuItem.getItemId();
+        Fragment fragment = null;
         switch (id) {
-            //home
             case R.id.action_home:
-                mFragment = new WeakReference<Fragment>(new TimeLineFragment());
-                replaceFragment(mFragment.get());
+                fragment = new TimeLineFragment();
                 break;
 
             case R.id.action_comment:
-                mFragment = new WeakReference<Fragment>(new CommentListFragment());
-                replaceFragment(mFragment.get());
+                fragment = new CommentListFragment();
                 break;
 
             case R.id.action_like:
-                AKToast.show(MainActivity.this, "工程师在研发中");
+                fragment = new LikeRankFragment();
                 break;
 
             case R.id.action_star:
-                mFragment = new WeakReference<Fragment>(new FavoriteListFragment());
-                replaceFragment(mFragment.get());
+                fragment = new FavoriteListFragment();
                 break;
 
             case R.id.action_logout:
@@ -106,6 +110,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
             default:
                 break;
+        }
+        if (fragment != null) {
+            mFragment = new WeakReference<Fragment>(fragment);
+            replaceFragment(fragment);
         }
         menuItem.setChecked(true);
         mDrawerLayout.closeDrawers();
@@ -121,6 +129,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         UIHelper.showUserDetail(this, user);
     }
 
+
+    @Override
+    protected void initData() {
+        super.initData();
+    }
+
     @Override
     protected void initView(View view) {
         AKView.setToolbar(this, R.id.toolbar);
@@ -129,6 +143,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mNavigationView.setNavigationItemSelectedListener(this);
 
         setupUser();
+
         mFragment = new WeakReference<Fragment>(new TimeLineFragment());
         replaceFragment(mFragment.get());
     }
@@ -168,19 +183,34 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         MUser user = AppContext.getInstance().getUser();
         mNameTextView.setText(user.getName());
         if (user.hasPortrait()) {
-            ImageLoader.getInstance(this).load(mUserImageView, user.getPortraitUrl(),R.mipmap.ic_default_image);
+            ImageLoader.getInstance(this).load(mUserImageView, user.getPortraitUrl(), R.mipmap.ic_default_image);
         } else {
             ImageLoader.getInstance(this).load(mUserImageView, R.mipmap.user_default_header);
         }
     }
+//
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        if (mFragment != null) {
+//            if (mFragment.get() instanceof TimeLineFragment) {
+//                ((TimeLineFragment) mFragment.get()).onRefresh();
+//            }
+//        }
+//    }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        if(mFragment!=null){
-            if(mFragment.get() instanceof TimeLineFragment ){
-                ((TimeLineFragment) mFragment.get()).onRefresh();
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        AKLog.d("xxxx", "requestCode: " + requestCode + " resultCode: " + resultCode);
+        if (requestCode == REQUEST_PUBLISH_POST && resultCode == RESULT_OK) {
+            AKLog.d("xxxxx", "=======================================");
+            if (mFragment != null) {
+                if (mFragment.get() instanceof TimeLineFragment) {
+                    ((TimeLineFragment) mFragment.get()).onRefresh();
+                }
             }
+            return;
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

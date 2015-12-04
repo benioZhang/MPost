@@ -1,5 +1,6 @@
 package com.benio.mpost.ui.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -196,16 +197,16 @@ public class PublishPostFragment extends RecyclerFragment implements AdapterView
         String content = AKView.getText(mPostContentEditText);
         MUser author = AppContext.getInstance().getUser();
 
-        Log.d("jsjsjsjsjs", author.toString());
-        if (author.getCanNotPost()!=null && author.getCanNotPost()) {
+        if (author.getCanNotPost() != null && author.getCanNotPost()) {
             AKToast.show(getActivity(), "你被禁止发帖，解封请联系管理员");
         } else {
             MPostApi.publishPost(author, content, mPostPhotoList, mVisibility, new ResponseListener() {
                 @Override
                 public void onSuccess() {
                     hideProgress();
-                    AKLog.d("发帖成功");
+                    AKLog.d(getString(R.string.info_publish_post_success));
                     showToast(R.string.info_publish_post_success);
+                    getActivity().setResult(Activity.RESULT_OK);
                     getActivity().finish();
                 }
 
