@@ -70,8 +70,8 @@ public class UserDetailActivity extends BaseActivity {
 
         mUserDetail = new UserDetail();
         mUserDetail.setUser(user);
-
-        if (user.getCanNotPost() != null && user.getCanNotPost()) {
+        MUser author = AppContext.getInstance().getUser();
+        if (author.getCanNotPost() != null && author.getCanNotPost()) {
             hideProgress();
             removeAllViews();
             AKToast.show(getBaseContext(), "你被禁止状态，无法查看内容，解封请联系管理员");
