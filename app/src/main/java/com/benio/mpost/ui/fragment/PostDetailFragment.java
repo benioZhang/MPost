@@ -18,6 +18,7 @@ import com.benio.mpost.bean.MPost;
 import com.benio.mpost.bean.MUser;
 import com.benio.mpost.bean.PostDetail;
 import com.benio.mpost.controller.MPostApi;
+import com.benio.mpost.controller.UIHelper;
 import com.benio.mpost.interf.impl.QueryListener;
 import com.benio.mpost.interf.impl.ResponseListener;
 import com.benio.mpost.network.ImageLoader;
@@ -81,7 +82,7 @@ public class PostDetailFragment extends BaseFragment {
     @Override
     protected void initView(View view) {
         MPost post = mPostDetail.getPost();
-        MUser author = post.getAuthor();
+        final MUser author = post.getAuthor();
         mNameTextView.setText(author.getName());
         mTimeTextView.setText(post.getCreatedAt());
         mContentTextView.setText(post.getContent());
@@ -91,6 +92,12 @@ public class PostDetailFragment extends BaseFragment {
         } else {
             ImageLoader.getInstance(this).load(mAuthorImageView, R.mipmap.user_default_header);
         }
+        mAuthorImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UIHelper.showUserDetail(getActivity(), author);
+            }
+        });
 
         // set mPostDetail photos
         if (post.hasPhoto()) {

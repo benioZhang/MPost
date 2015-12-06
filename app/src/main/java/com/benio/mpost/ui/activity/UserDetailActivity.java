@@ -11,9 +11,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.TextView;
 
 import com.benio.mpost.R;
-import com.benio.mpost.adapter.BaseRecyclerAdapter;
 import com.benio.mpost.adapter.TimeLineAdapter;
 import com.benio.mpost.app.AppContext;
 import com.benio.mpost.bean.MPost;
@@ -103,8 +103,10 @@ public class UserDetailActivity extends BaseActivity {
 
             @Override
             public void onSuccess(List<MUser> list) {
-                AKLog.d("xxxxx", "result list: " + list.toString());
-                mUserDetail.setFollowing(isUserInList(user, list));
+                boolean isFollowing = Utils.isUserInList(user, list);
+                AKLog.d("xxxx","");
+                mUserDetail.setFollowing(isFollowing);
+                mFloatingActionButton.setSelected(isFollowing);
                 checkReady();
             }
         });
@@ -117,36 +119,112 @@ public class UserDetailActivity extends BaseActivity {
         if (mUserDetail.isReady()) {
             hideProgress();
 
-            final BaseRecyclerAdapter<MPost> adapter = new TimeLineAdapter(UserDetailActivity.this, mUserDetail.getPostList());
+            final TimeLineAdapter adapter = new TimeLineAdapter(UserDetailActivity.this, mUserDetail.getPostList());
             adapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     UIHelper.showPostDetail(UserDetailActivity.this, adapter.getItem(position));
                 }
             });
+            adapter.setOnFavorPostListener(new TimeLineAdapter.OnFavorPostListener() {
+                @Override
+                public void onFavorPost(View view, MPost post) {
+                    favorPost(view, post);
+                }
+            });
+            adapter.setOnLikePostListener(new TimeLineAdapter.OnLikePostListener() {
+                @Override
+                public void onLikePost(final View view, final MPost post) {
+                    likePost(view, post);
+                }
+            });
             mRecyclerView.setAdapter(adapter);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(UserDetailActivity.this));
-
-            setupFollow();
         }
     }
 
-    /**
-     * 检查user是否存在list中
-     *
-     * @param user
-     * @param list
-     * @return
-     */
-    private boolean isUserInList(MUser user, List<MUser> list) {
-        if (list != null) {
-            for (MUser u : list) {
-                if (u.equals(user)) {
-                    return true;
+    void likePost(final View view, final MPost post) {
+        final MUser user = AppContext.getInstance().getUser();
+        //先检查当前用户是否已经赞贴
+        MPostApi.isLikedPost(user, post, new QueryListener<MPost>() {
+            @Override
+            public void onSuccess(List<MPost> result) {
+                post.setLiked(Utils.isPostInList(post, result));
+                if (post.isLiked()) {
+                    //已点赞，但是view的点赞状态没更新
+                    if (!view.isSelected()) {
+                        view.setSelected(true);
+                        AKToast.show(UserDetailActivity.this, "已点赞");
+                        return;
+                    }
                 }
+                //未点赞，则更新点赞数据
+                final boolean isLiked = !post.isLiked();
+                MPostApi.likePost(user, post, isLiked, new ResponseListener() {
+                    @Override
+                    public void onFailure(int code, String msg) {
+                        ErrorLog.log(code, msg);
+                        AKToast.show(UserDetailActivity.this, R.string.info_like_failed);
+                    }
+
+                    @Override
+                    public void onSuccess() {
+                        post.setLiked(isLiked);
+                        post.increaseLike(isLiked ? +1 : -1);//赞则赞数+1，否则-1
+                        view.setSelected(isLiked);
+                        ((TextView) view).setText(String.valueOf(post.getLikeCount()));
+                    }
+                });
             }
-        }
-        return false;
+
+            @Override
+            public void onFailure(int i, String s) {
+                ErrorLog.log(i, s);
+                AKToast.show(UserDetailActivity.this, R.string.info_like_failed);
+            }
+        });
+    }
+
+    void favorPost(final View view, final MPost post) {
+        final MUser user = AppContext.getInstance().getUser();
+        //先检查当前用户是否已经收藏
+        MPostApi.isFavoredPost(user, post, new QueryListener<MPost>() {
+            @Override
+            public void onSuccess(List<MPost> result) {
+                post.setFavored(Utils.isPostInList(post, result));
+                if (post.isFavored()) {
+                    //已收藏，但是view的收藏状态没更新
+                    if (!view.isSelected()) {
+                        view.setSelected(true);
+                        AKToast.show(UserDetailActivity.this, "已收藏");
+                        return;
+                    }
+                }
+                //未收藏，则更新收藏数据
+                final boolean isFavored = !post.isFavored();
+                MPostApi.favorPost(user, post, isFavored, new ResponseListener() {
+                    @Override
+                    public void onFailure(int code, String msg) {
+                        AKToast.show(UserDetailActivity.this, R.string.info_favor_failed);
+                        ErrorLog.log(code, msg);
+                    }
+
+                    @Override
+                    public void onSuccess() {
+                        post.setFavored(isFavored);
+                        post.increaseFavor(isFavored ? +1 : -1);//收藏则收藏数+1，否则-1
+                        view.setSelected(isFavored);
+                        ((TextView) view).setText(String.valueOf(post.getFavorCount()));
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(int i, String s) {
+                ErrorLog.log(i, s);
+                AKToast.show(UserDetailActivity.this, R.string.info_like_failed);
+            }
+        });
     }
 
     @Override
@@ -177,7 +255,7 @@ public class UserDetailActivity extends BaseActivity {
     void onFollowUserEvent() {
         MUser me = AppContext.getInstance().getUser();
         if (mUserDetail.getUser().equals(me)) {
-            AKToast.show(this, "不能收藏自己");
+            AKToast.show(this, "不能关注自己");
             return;
         }
         final boolean follow = !mUserDetail.isFollowing();
@@ -192,13 +270,9 @@ public class UserDetailActivity extends BaseActivity {
             public void onSuccess() {
                 AKLog.d("关注成功");
                 mUserDetail.setFollowing(follow);
-                setupFollow();
+                mFloatingActionButton.setSelected(follow);
             }
         });
-    }
-
-    private void setupFollow() {
-        mFloatingActionButton.setImageResource(mUserDetail.isFollowing() ? R.mipmap.btn_like_selected : R.mipmap.btn_like_unselected);
     }
 
     @Override

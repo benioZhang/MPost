@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 
 import com.benio.mpost.bean.MPost;
+import com.benio.mpost.bean.MUser;
 
 import java.util.List;
 
@@ -37,6 +38,25 @@ public class Utils {
         if (list == null || list.isEmpty()) return false;
         for (MPost mPost : list) {
             if (TextUtils.equals(mPost.getObjectId(), post.getObjectId())) return true;
+        }
+        return false;
+    }
+
+
+    /**
+     * 检查user是否存在list中
+     *
+     * @param user
+     * @param list
+     * @return
+     */
+    public static boolean isUserInList(MUser user, List<MUser> list) {
+        if (list != null) {
+            for (MUser u : list) {
+                if (u.equals(user)) {
+                    return true;
+                }
+            }
         }
         return false;
     }
