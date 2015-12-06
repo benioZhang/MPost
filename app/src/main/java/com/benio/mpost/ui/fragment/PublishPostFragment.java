@@ -25,6 +25,7 @@ import com.benio.mpost.controller.MPostApi;
 import com.benio.mpost.controller.UIHelper;
 import com.benio.mpost.interf.impl.ResponseListener;
 import com.benio.mpost.util.AKLog;
+import com.benio.mpost.util.AKToast;
 import com.benio.mpost.util.AKView;
 import com.benio.mpost.widget.DividerGridItemDecoration;
 
@@ -195,23 +196,28 @@ public class PublishPostFragment extends RecyclerFragment implements AdapterView
 
         String content = AKView.getText(mPostContentEditText);
         MUser author = AppContext.getInstance().getUser();
+        if (author.getCanNotPost()) {
+            hideProgress();
+            AKToast.show(getActivity(), "你被禁止发帖，解封请联系管理员");
+            getActivity().finish();
+        } else {
+            MPostApi.publishPost(author, content, mPostPhotoList, mVisibility, new ResponseListener() {
+                @Override
+                public void onSuccess() {
+                    hideProgress();
+                    AKLog.d(getString(R.string.info_publish_post_success));
+                    showToast(R.string.info_publish_post_success);
+                    getActivity().setResult(Activity.RESULT_OK);
+                    getActivity().finish();
+                }
 
-        MPostApi.publishPost(author, content, mPostPhotoList, mVisibility, new ResponseListener() {
-            @Override
-            public void onSuccess() {
-                hideProgress();
-                AKLog.d(getString(R.string.info_publish_post_success));
-                showToast(R.string.info_publish_post_success);
-                getActivity().setResult(Activity.RESULT_OK);
-                AppManager.getInstance().finishActivity(getActivity());
-            }
-
-            @Override
-            public void onFailure(int code, String msg) {
-                AKLog.d("失败 " + "code " + code + "  msg  " + msg);
-                showToast(R.string.info_publish_post_failure);
-            }
-        });
+                @Override
+                public void onFailure(int code, String msg) {
+                    AKLog.d("失败 " + "code " + code + "  msg  " + msg);
+                    showToast(R.string.info_publish_post_failure);
+                }
+            });
+        }
     }
 
 }

@@ -71,47 +71,67 @@ public class UserDetailActivity extends BaseActivity {
 
         mUserDetail = new UserDetail();
         mUserDetail.setUser(user);
-
-        MPostApi.getUserPostList(user, new QueryListener<MPost>() {
-            @Override
-            public void onFailure(int code, String msg) {
-                ErrorLog.log(code, msg);
-                AKToast.show(UserDetailActivity.this, R.string.info_access_error);
-                mUserDetail.setPostList(null);
-                checkReady();
-            }
-
-            @Override
-            public void onSuccess(List<MPost> list) {
-                if (!Utils.checkListEmpty(list)) {
-                    mUserDetail.setPostList(list);
+//        MUser author = AppContext.getInstance().getUser();
+//        if (author.getCanNotPost()) {
+//            hideProgress();
+//            removeAllViews();
+//            AKToast.show(getBaseContext(), "你被禁止状态，无法查看内容，解封请联系管理员");
+//        } else {
+            MPostApi.getUserPostList(user, new QueryListener<MPost>() {
+                @Override
+                public void onFailure(int code, String msg) {
+                    ErrorLog.log(code, msg);
+                    AKToast.show(UserDetailActivity.this, R.string.info_access_error);
+                    mUserDetail.setPostList(null);
                     checkReady();
-                } else {
-                    AKToast.show(UserDetailActivity.this, "还没有发过说说哦～");
                 }
-            }
-        });
 
-        final MUser me = AppContext.getInstance().getUser();
-        MPostApi.isFollowingUser(user, me, new QueryListener<MUser>() {
-            @Override
-            public void onFailure(int code, String msg) {
-                ErrorLog.log(code, msg);
-                AKToast.show(UserDetailActivity.this, R.string.info_access_error);
-                mUserDetail.setFollowing(false);
-                checkReady();
-            }
+                @Override
+                public void onSuccess(List<MPost> list) {
+                    if (!Utils.checkListEmpty(list)) {
+                        mUserDetail.setPostList(list);
+                        checkReady();
+                    } else {
+                        AKToast.show(UserDetailActivity.this, "还没有发过说说哦～");
+                    }
+                }
+            });
 
-            @Override
-            public void onSuccess(List<MUser> list) {
-//                AKLog.d("xxxx", "follow list:  " + list.toString());
-                boolean isFollowing = Utils.isUserInList(user, list);
-//                AKLog.d("xxxx", "isFollowing " + isFollowing);
-                mUserDetail.setFollowing(isFollowing);
-                mFloatingActionButton.setSelected(isFollowing);
-                checkReady();
-            }
-        });
+
+            final MUser me = AppContext.getInstance().getUser();
+            MPostApi.isFollowingUser(user, me, new QueryListener<MUser>() {
+                @Override
+                public void onFailure(int code, String msg) {
+                    ErrorLog.log(code, msg);
+                    AKToast.show(UserDetailActivity.this, R.string.info_access_error);
+                    mUserDetail.setFollowing(false);
+                    checkReady();
+                }
+
+                @Override
+                public void onSuccess(List<MUser> list) {
+                    AKLog.d("xxxxx", "result list: " + list.toString());
+                    mUserDetail.setFollowing(Utils.isUserInList(user, list));
+                    checkReady();
+                }
+            });
+        }
+//    }
+
+
+//    @Override
+//    public void onSuccess(List<MUser> list) {
+////                AKLog.d("xxxx", "follow list:  " + list.toString());
+//        boolean isFollowing = Utils.isUserInList(user, list);
+////                AKLog.d("xxxx", "isFollowing " + isFollowing);
+//        mUserDetail.setFollowing(isFollowing);
+//        mFloatingActionButton.setSelected(isFollowing);
+//        checkReady();
+//    }
+
+    private void removeAllViews() {
+        mRecyclerView.setVisibility(View.GONE);
+        mFloatingActionButton.setVisibility(View.GONE);
     }
 
     /**
@@ -160,7 +180,7 @@ public class UserDetailActivity extends BaseActivity {
                         return;
                     }
                 }
-                //未点赞，则更新点赞数据
+//未点赞，则更新点赞数据
                 final boolean isLiked = !post.isLiked();
                 MPostApi.likePost(user, post, isLiked, new ResponseListener() {
                     @Override
@@ -270,7 +290,7 @@ public class UserDetailActivity extends BaseActivity {
 
             @Override
             public void onSuccess() {
-                AKLog.d("xxxx","关注成功");
+                AKLog.d("xxxx", "关注成功");
                 mUserDetail.setFollowing(follow);
                 mFloatingActionButton.setSelected(follow);
             }
