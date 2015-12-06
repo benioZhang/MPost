@@ -46,6 +46,7 @@ public class UserDetailActivity extends BaseActivity {
     FloatingActionButton mFloatingActionButton;
 
     private UserDetail mUserDetail;
+    private int mPage;
 
     public static Intent newIntent(Context context, MUser user) {
         Intent intent = new Intent(context, UserDetailActivity.class);
@@ -103,8 +104,9 @@ public class UserDetailActivity extends BaseActivity {
 
             @Override
             public void onSuccess(List<MUser> list) {
+//                AKLog.d("xxxx", "follow list:  " + list.toString());
                 boolean isFollowing = Utils.isUserInList(user, list);
-                AKLog.d("xxxx","");
+//                AKLog.d("xxxx", "isFollowing " + isFollowing);
                 mUserDetail.setFollowing(isFollowing);
                 mFloatingActionButton.setSelected(isFollowing);
                 checkReady();
@@ -268,7 +270,7 @@ public class UserDetailActivity extends BaseActivity {
 
             @Override
             public void onSuccess() {
-                AKLog.d("关注成功");
+                AKLog.d("xxxx","关注成功");
                 mUserDetail.setFollowing(follow);
                 mFloatingActionButton.setSelected(follow);
             }

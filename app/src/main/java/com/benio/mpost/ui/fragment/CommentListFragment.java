@@ -1,7 +1,6 @@
 package com.benio.mpost.ui.fragment;
 
 import android.os.Handler;
-import android.os.Message;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -13,9 +12,9 @@ import com.benio.mpost.bean.Comment;
 import com.benio.mpost.controller.MPostApi;
 import com.benio.mpost.controller.UIHelper;
 import com.benio.mpost.interf.impl.QueryListener;
-import com.benio.mpost.util.AKToast;
 import com.benio.mpost.util.ErrorLog;
 import com.benio.mpost.util.Utils;
+import com.benio.mpost.widget.SwipeRefreshLayout;
 
 import java.util.List;
 
@@ -26,31 +25,33 @@ public class CommentListFragment extends RefreshRecyclerFragment {
 
     private CommentListAdapter mAdapter;
 
+    protected int mPage;
+    private Handler mHandler = new Handler();
+    private Runnable mRunnable = new Runnable() {
+        @Override
+        public void run() {
+            getCommentList();
+        }
+    };
+
     @Override
     public void onLoad() {
         setLoadingState(true);
-        new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                setLoadingState(false);
-                AKToast.show(getActivity(), "加载更多");
-            }
-        }.sendEmptyMessageDelayed(1, 2000);
-        getCommentList();
-
+        mPage++;
+        mHandler.post(mRunnable);
     }
 
     @Override
     public void onRefresh() {
         setRefreshingState(true);
-        new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                setRefreshingState(false);
-//                AKToast.show(getActivity(), "下拉刷新");
-            }
-        }.sendEmptyMessageDelayed(1, 2000);
-        getCommentList();
+        mPage = 0;
+        mHandler.post(mRunnable);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mHandler.removeCallbacks(mRunnable);
     }
 
     @Override
@@ -65,32 +66,47 @@ public class CommentListFragment extends RefreshRecyclerFragment {
     }
 
     void getCommentList() {
-
         MPostApi.getMyCommentList(AppContext.getInstance().getUser(), new QueryListener<Comment>() {
             @Override
             public void onFailure(int code, String msg) {
                 ErrorLog.log(code, msg);
                 showToast(R.string.info_access_error);
+                setRefreshingState(false);
+                setLoadingState(false);
             }
 
             @Override
             public void onSuccess(List<Comment> list) {
-
                 if (!Utils.checkListEmpty(list)) {
-                    mAdapter = new CommentListAdapter(getActivity(), list);
-                    mAdapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            UIHelper.showPostDetail(getActivity(), mAdapter.getItem(position).getPost());
-                        }
-                    });
-                    setAdapter(mAdapter);
+                    SwipeRefreshLayout refreshLayout = getRefreshLayout();
+                    if (refreshLayout.isLoading()) {
+                        setLoadingState(false);
+                        getCommentListAdapter().addAll(list);
+                    } else {
+                        setRefreshingState(false);
+                        getCommentListAdapter().setData(list);
+                    }
                 } else {
-                    // TODO: 11/5/15 内容为空时
-                    showToast("还没收到评论哦~");
+                    setRefreshingState(false);
+                    setLoadingState(false);
+                    showToast("没有数据~~");
                 }
             }
-        });
+        }, mPage);
+    }
+
+    CommentListAdapter getCommentListAdapter() {
+        if (null == mAdapter) {
+            mAdapter = new CommentListAdapter(getActivity());
+            mAdapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    UIHelper.showPostDetail(getActivity(), mAdapter.getItem(position).getPost());
+                }
+            });
+            setAdapter(mAdapter);
+        }
+        return mAdapter;
     }
 
 }

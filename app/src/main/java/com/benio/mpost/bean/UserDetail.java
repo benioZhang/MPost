@@ -1,7 +1,5 @@
 package com.benio.mpost.bean;
 
-import com.benio.mpost.util.AKLog;
-
 import java.util.List;
 
 /**
@@ -64,6 +62,6 @@ public class UserDetail {
         synchronized (this) {
             this.readyCount++;
         }
-        AKLog.i("xxxx", "readyCount: " + readyCount);
+//        AKLog.i("xxxx", "readyCount: " + readyCount);
     }
 }

@@ -209,6 +209,23 @@ public class MPostApi {
     }
 
     /**
+     * 显示个人点赞post
+     *
+     * @param user
+     * @param listener
+     */
+    public static void getMyLikePost(MUser user, FindListener<MPost> listener, int page) {
+        BmobQuery<MPost> query = new BmobQuery<>();
+        query.addWhereRelatedTo(Column.User.LIKE_RELATION, new BmobPointer(user));
+        query.include(Column.Post.AUTHOR);
+        query.order(Column.Post.REVERSE_CREATED_AT);
+        int num = Constant.QUERY_LIMIT;
+        query.setSkip(page * num);
+        query.setLimit(num);
+        query.findObjects(getContext(), listener);
+    }
+
+    /**
      * 显示个人收藏post
      *
      * @param user
@@ -275,12 +292,12 @@ public class MPostApi {
      * 是否关注用户
      *
      * @param user
-     * @param follower 当前登陆用户
+     * @param me       当前登陆用户
      * @param listener
      */
-    public static void isFollowingUser(final MUser user, final MUser follower, final FindListener<MUser> listener) {
+    public static void isFollowingUser(final MUser user, final MUser me, final FindListener<MUser> listener) {
         BmobQuery<MUser> query = new BmobQuery<>();
-        query.addWhereRelatedTo(Column.User.FOLLOW_RELATION, new BmobPointer(user));
+        query.addWhereRelatedTo(Column.User.FOLLOW_RELATION, new BmobPointer(me));
         query.findObjects(getContext(), listener);
     }
 
@@ -408,10 +425,11 @@ public class MPostApi {
      * @param user
      * @param listener
      */
-    public static void getMyCommentList(MUser user, FindListener<Comment> listener) {
+    public static void getMyCommentList(MUser user, FindListener<Comment> listener, int page) {
         BmobQuery<Comment> query = new BmobQuery<>();
         query.addWhereEqualTo(Column.Comment.TO_USER, new BmobPointer(user));
         query.include(Column.Comment.FROM_USER + "," + Column.Comment.POST + "," + Column.Comment.TO_USER);
+        query.setSkip(page * Constant.QUERY_LIMIT);
         query.setLimit(Constant.QUERY_LIMIT);
         query.order(Column.Base.REVERSE_CREATED_AT);
         query.findObjects(AppContext.getInstance(), listener);

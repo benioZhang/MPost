@@ -8,11 +8,14 @@
             android:id="@+id/action_comment"
             android:title="@string/action_comment"/>
         <item
-            android:id="@+id/action_like"
-            android:title="@string/action_like"/>
+            android:id="@+id/action_like_rank"
+            android:title="@string/action_like_rank"/>
         <item
             android:id="@+id/action_star"
             android:title="@string/action_star"/>
+        <item
+            android:id="@+id/action_like"
+            android:title="@string/action_like"/>
     </group>
     <item
         android:title="">

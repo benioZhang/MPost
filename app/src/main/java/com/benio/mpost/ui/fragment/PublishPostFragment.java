@@ -17,6 +17,7 @@ import com.benio.mpost.R;
 import com.benio.mpost.adapter.BaseRecyclerAdapter;
 import com.benio.mpost.adapter.ThumbnailAdapter;
 import com.benio.mpost.app.AppContext;
+import com.benio.mpost.app.AppManager;
 import com.benio.mpost.bean.MPost;
 import com.benio.mpost.bean.MUser;
 import com.benio.mpost.bean.PostVisibility;
@@ -202,7 +203,7 @@ public class PublishPostFragment extends RecyclerFragment implements AdapterView
                 AKLog.d(getString(R.string.info_publish_post_success));
                 showToast(R.string.info_publish_post_success);
                 getActivity().setResult(Activity.RESULT_OK);
-                getActivity().finish();
+                AppManager.getInstance().finishActivity(getActivity());
             }
 
             @Override

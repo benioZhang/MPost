@@ -15,7 +15,6 @@ import com.benio.mpost.controller.MPostApi;
 import com.benio.mpost.controller.UIHelper;
 import com.benio.mpost.interf.impl.QueryListener;
 import com.benio.mpost.interf.impl.ResponseListener;
-import com.benio.mpost.util.AKLog;
 import com.benio.mpost.util.ErrorLog;
 import com.benio.mpost.util.Utils;
 import com.benio.mpost.widget.SwipeRefreshLayout;
@@ -81,15 +80,12 @@ public class TimeLineFragment extends RefreshRecyclerFragment {
 
             @Override
             public void onSuccess(List<MPost> list) {
-                AKLog.d("xxx", "timeLine :" + list.toString());
                 if (!Utils.checkListEmpty(list)) {
                     SwipeRefreshLayout refreshLayout = getRefreshLayout();
                     if (refreshLayout.isLoading()) {
-                        AKLog.d("xxx", "isLoading ");
                         setLoadingState(false);
                         getTimeLineAdapter().addAll(list);
                     } else {
-                        AKLog.d("xxx", "isRefreshing ");
                         setRefreshingState(false);
                         getTimeLineAdapter().setData(list);
                     }

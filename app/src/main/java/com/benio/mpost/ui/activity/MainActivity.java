@@ -19,6 +19,7 @@ import com.benio.mpost.controller.UIHelper;
 import com.benio.mpost.network.ImageLoader;
 import com.benio.mpost.ui.fragment.CommentListFragment;
 import com.benio.mpost.ui.fragment.FavoriteListFragment;
+import com.benio.mpost.ui.fragment.LikeListFragment;
 import com.benio.mpost.ui.fragment.LikeRankFragment;
 import com.benio.mpost.ui.fragment.TimeLineFragment;
 import com.benio.mpost.util.AKLog;
@@ -70,8 +71,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
             //发帖
             case R.id.action_publish_post:
-//                Intent intent = FragmentContainerActivity.newIntent(this, Container.PUBLISH_POST, null);
-//                startActivityForResult(intent, REQUEST_PUBLISH_POST);
                 UIHelper.showPublishPostForResult(this, REQUEST_PUBLISH_POST);
                 return true;
 
@@ -94,12 +93,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 fragment = new CommentListFragment();
                 break;
 
-            case R.id.action_like:
+            case R.id.action_like_rank:
                 fragment = new LikeRankFragment();
                 break;
 
             case R.id.action_star:
                 fragment = new FavoriteListFragment();
+                break;
+
+            case R.id.action_like:
+                fragment = new LikeListFragment();
                 break;
 
             case R.id.action_logout:
@@ -125,6 +128,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      */
     @OnClick(R.id.ll_header)
     void onUserClickEvent() {
+        mDrawerLayout.closeDrawers();
         MUser user = AppContext.getInstance().getUser();
         UIHelper.showUserDetail(this, user);
     }
@@ -188,17 +192,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             ImageLoader.getInstance(this).load(mUserImageView, R.mipmap.user_default_header);
         }
     }
-//
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        if (mFragment != null) {
-//            if (mFragment.get() instanceof TimeLineFragment) {
-//                ((TimeLineFragment) mFragment.get()).onRefresh();
-//            }
-//        }
-//    }
 
+    /*
+     * 暂时不知道为什么不会回调
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         AKLog.d("xxxx", "requestCode: " + requestCode + " resultCode: " + resultCode);
