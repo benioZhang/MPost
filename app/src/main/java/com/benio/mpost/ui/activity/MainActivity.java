@@ -19,8 +19,8 @@ import com.benio.mpost.controller.UIHelper;
 import com.benio.mpost.network.ImageLoader;
 import com.benio.mpost.ui.fragment.CommentListFragment;
 import com.benio.mpost.ui.fragment.FavoriteListFragment;
+import com.benio.mpost.ui.fragment.FollowingUserFragment;
 import com.benio.mpost.ui.fragment.LikeListFragment;
-import com.benio.mpost.ui.fragment.LikeRankFragment;
 import com.benio.mpost.ui.fragment.TimeLineFragment;
 import com.benio.mpost.util.AKLog;
 import com.benio.mpost.util.AKView;
@@ -64,6 +64,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 mDrawerLayout.openDrawer(GravityCompat.START);
                 return true;
 
+            case R.id.action_ranking_list:
+                UIHelper.showLikeRankingList(this);
+                return true;
             //搜索
             case R.id.action_search:
                 UIHelper.showSearch(this);
@@ -93,8 +96,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 fragment = new CommentListFragment();
                 break;
 
-            case R.id.action_like_rank:
-                fragment = new LikeRankFragment();
+            case R.id.action_follow:
+                fragment = new FollowingUserFragment();
                 break;
 
             case R.id.action_star:

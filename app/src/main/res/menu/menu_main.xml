@@ -1,16 +1,22 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto"
-      xmlns:tools="http://schemas.android.com/tools"
-      tools:context=".MainActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
     <item
         android:id="@+id/action_search"
         android:icon="@mipmap/ic_search"
         android:title="@string/action_search"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/action_ranking_list"
+        android:icon="@mipmap/ic_ranking_list"
+        android:title="@string/action_ranking_list"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_publish_post"
         android:icon="@mipmap/ic_pencil"
         android:title="@string/action_publish_post"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom" />
+
 </menu>

@@ -1,0 +1,38 @@
+package com.benio.mpost.adapter;
+
+import android.content.Context;
+
+import com.benio.mpost.R;
+import com.benio.mpost.bean.MUser;
+import com.benio.mpost.bean.RecyclerHolder;
+import com.benio.mpost.network.ImageLoader;
+
+import java.util.List;
+
+/**
+ * Created by benio on 2015/12/6.
+ */
+public class FollowingUserAdapter extends BaseRecyclerAdapter<MUser> {
+    public FollowingUserAdapter(Context context, List<MUser> data) {
+        super(context, data);
+    }
+
+    public FollowingUserAdapter(Context context) {
+        super(context);
+    }
+
+    @Override
+    public int getLayoutRes(int viewType) {
+        return R.layout.item_following_user;
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerHolder holder, MUser data) {
+        holder.getTextView(R.id.tv_following_user).setText(data.getName());
+        if (data.hasPortrait()) {
+            ImageLoader.getInstance(getContext()).load(holder.getImageView(R.id.iv_following_user), data.getPortraitUrl());
+        } else {
+            ImageLoader.getInstance(getContext()).load(holder.getImageView(R.id.iv_following_user), R.mipmap.ic_user_def_2);
+        }
+    }
+}

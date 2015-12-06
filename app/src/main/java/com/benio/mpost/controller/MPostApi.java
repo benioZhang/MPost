@@ -35,6 +35,48 @@ public class MPostApi {
     static final String TAG = MPostApi.class.getSimpleName();
 
     /**
+     * 获取关注用户列表
+     *
+     * @param me
+     * @param listener
+     * @param page
+     */
+    public static void getFollowingUserList(MUser me, FindListener<MUser> listener, int page) {
+        BmobQuery<MUser> query = new BmobQuery<>();
+        query.addWhereRelatedTo(Column.User.FOLLOW_RELATION, new BmobPointer(me));
+        query.include(Column.Post.AUTHOR);
+        query.setSkip(page * Constant.QUERY_LIMIT);
+        query.setLimit(Constant.QUERY_LIMIT);
+        query.findObjects(getContext(), listener);
+    }
+
+    /**
+     * 获取@我的评论/我发的评论
+     *
+     * @param me
+     * @param listener
+     */
+    public static void getMyCommentList(MUser me, FindListener<Comment> listener, int page) {
+        BmobQuery<Comment> q1 = new BmobQuery<>();
+        q1.addWhereEqualTo(Column.Comment.TO_USER, new BmobPointer(me));
+
+        BmobQuery<Comment> q2 = new BmobQuery<>();
+        q2.addWhereEqualTo(Column.Comment.FROM_USER, new BmobPointer(me));
+
+        List<BmobQuery<Comment>> queries = new ArrayList<>(2);
+        queries.add(q1);
+        queries.add(q2);
+
+        BmobQuery<Comment> query = new BmobQuery<>();
+        query.or(queries);
+        query.include(Column.Comment.FROM_USER + "," + Column.Comment.POST + "," + Column.Comment.TO_USER);
+        query.setSkip(page * Constant.QUERY_LIMIT);
+        query.setLimit(Constant.QUERY_LIMIT);
+        query.order(Column.Base.REVERSE_CREATED_AT);
+        query.findObjects(getContext(), listener);
+    }
+
+    /**
      * 获取点赞榜列表
      *
      * @param listener
@@ -419,20 +461,4 @@ public class MPostApi {
     private MPostApi() {
     }
 
-
-    /**
-     * 获取@我的评论
-     *
-     * @param user
-     * @param listener
-     */
-    public static void getMyCommentList(MUser user, FindListener<Comment> listener, int page) {
-        BmobQuery<Comment> query = new BmobQuery<>();
-        query.addWhereEqualTo(Column.Comment.TO_USER, new BmobPointer(user));
-        query.include(Column.Comment.FROM_USER + "," + Column.Comment.POST + "," + Column.Comment.TO_USER);
-        query.setSkip(page * Constant.QUERY_LIMIT);
-        query.setLimit(Constant.QUERY_LIMIT);
-        query.order(Column.Base.REVERSE_CREATED_AT);
-        query.findObjects(AppContext.getInstance(), listener);
-    }
 }

@@ -3,28 +3,25 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/action_home"
-            android:title="@string/action_home"/>
+            android:title="@string/action_home" />
         <item
             android:id="@+id/action_comment"
-            android:title="@string/action_comment"/>
+            android:title="@string/action_comment" />
         <item
-            android:id="@+id/action_like_rank"
-            android:title="@string/action_like_rank"/>
+            android:id="@+id/action_follow"
+            android:title="@string/action_follow" />
         <item
             android:id="@+id/action_star"
-            android:title="@string/action_star"/>
+            android:title="@string/action_star" />
         <item
             android:id="@+id/action_like"
-            android:title="@string/action_like"/>
+            android:title="@string/action_like" />
     </group>
-    <item
-        android:title="">
+    <item android:title="">
         <menu>
             <item
                 android:id="@+id/action_logout"
-                android:title="注销"/>
-            <item
-                android:title="sub 2"/>
+                android:title="注销" />
         </menu>
     </item>
 </menu>

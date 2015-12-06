@@ -20,6 +20,11 @@ import com.benio.mpost.ui.fragment.PostDetailFragment;
  */
 public class UIHelper {
 
+
+    public static void showLikeRankingList(Activity activity) {
+        showFragmentContainer(activity, Container.RANKING_LIST);
+    }
+
     /**
      * 显示用户详情
      */

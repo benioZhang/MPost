@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 
 import com.benio.mpost.R;
 import com.benio.mpost.ui.fragment.AlbumFragment;
+import com.benio.mpost.ui.fragment.LikeRankFragment;
 import com.benio.mpost.ui.fragment.LoginFragment;
 import com.benio.mpost.ui.fragment.PostDetailFragment;
 import com.benio.mpost.ui.fragment.PostVisibilityFragment;
@@ -20,32 +21,57 @@ import com.benio.mpost.ui.fragment.SearchFragment;
 public class Container {
     /** 默认值 */
     //public static final int NONE = -1;
-    /** 登陆 */
+    /**
+     * 登陆
+     */
     public static final int LOGIN = 1;
-    /** 注册 */
+    /**
+     * 注册
+     */
     public static final int REGISTER = 2;
-    /** 相册 */
+    /**
+     * 相册
+     */
     public static final int ALBUM = 3;
-    /** 发帖 */
+    /**
+     * 发帖
+     */
     public static final int PUBLISH_POST = 4;
-    /** 搜索 */
+    /**
+     * 搜索
+     */
     public static final int SEARCH = 5;
-    /** 设置帖子可见性 */
+    /**
+     * 设置帖子可见性
+     */
     public static final int POST_VISIBLE = 6;
-    /** 帖子详情 */
+    /**
+     * 帖子详情
+     */
     public static final int POST_DETAIL = 7;
+    /**
+     * 点赞榜
+     */
+    public static final int RANKING_LIST = 8;
 
-
-    /** 防止使用不是Container的id */
-    @IntDef({LOGIN, REGISTER, ALBUM, PUBLISH_POST, SEARCH, POST_VISIBLE, POST_DETAIL})
+    /**
+     * 防止使用不是Container的id
+     */
+    @IntDef({LOGIN, REGISTER, ALBUM, PUBLISH_POST, SEARCH, POST_VISIBLE, POST_DETAIL, RANKING_LIST})
     public @interface ContainerType {
     }
 
-    /** fragment class */
+    /**
+     * fragment class
+     */
     private Class<? extends Fragment> clazz;
-    /** 页面title */
+    /**
+     * 页面title
+     */
     private int title;
-    /** 为了可以复用同一个Container */
+    /**
+     * 为了可以复用同一个Container
+     */
     private static Container container = new Container();
 
     public int getTitle() {
@@ -95,6 +121,11 @@ public class Container {
             case POST_DETAIL:
                 container.clazz = PostDetailFragment.class;
                 container.title = R.string.title_post_detail;
+                break;
+
+            case RANKING_LIST:
+                container.clazz = LikeRankFragment.class;
+                container.title = 0;
                 break;
 
             default:
