@@ -33,7 +33,7 @@ public class TimeLineFragment extends RefreshRecyclerFragment {
     private Runnable mRunnable = new Runnable() {
         @Override
         public void run() {
-            getPostList();
+            getPostList("");
         }
     };
 
@@ -65,10 +65,10 @@ public class TimeLineFragment extends RefreshRecyclerFragment {
     @Override
     protected void initData() {
         super.initData();
-        getPostList();
+        getPostList("");
     }
 
-    void getPostList() {
+    void getPostList(String filter) {
         MPostApi.getPostList(new QueryListener<MPost>() {
             @Override
             public void onFailure(int code, String msg) {
@@ -161,6 +161,7 @@ public class TimeLineFragment extends RefreshRecyclerFragment {
                         post.increaseLike(isLiked ? +1 : -1);//赞则赞数+1，否则-1
                         view.setSelected(isLiked);
                         ((TextView) view).setText(String.valueOf(post.getLikeCount()));
+                        getTimeLineAdapter().notifyDataSetChanged();
                     }
                 });
             }
@@ -203,6 +204,7 @@ public class TimeLineFragment extends RefreshRecyclerFragment {
                         post.increaseFavor(isFavored ? +1 : -1);//收藏则收藏数+1，否则-1
                         view.setSelected(isFavored);
                         ((TextView) view).setText(String.valueOf(post.getFavorCount()));
+                        getTimeLineAdapter().notifyDataSetChanged();
                     }
                 });
             }
