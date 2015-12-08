@@ -33,7 +33,7 @@ public class TimeLineFragment extends RefreshRecyclerFragment {
     private Runnable mRunnable = new Runnable() {
         @Override
         public void run() {
-            getPostList("");
+            getPostList();
         }
     };
 
@@ -65,10 +65,10 @@ public class TimeLineFragment extends RefreshRecyclerFragment {
     @Override
     protected void initData() {
         super.initData();
-        getPostList("");
+        getPostList();
     }
 
-    void getPostList(String filter) {
+    void getPostList() {
         MPostApi.getPostList(new QueryListener<MPost>() {
             @Override
             public void onFailure(int code, String msg) {

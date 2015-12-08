@@ -13,12 +13,12 @@ import java.util.List;
 /**
  * Created by benio on 2015/12/6.
  */
-public class FollowingUserAdapter extends BaseRecyclerAdapter<MUser> {
-    public FollowingUserAdapter(Context context, List<MUser> data) {
+public class UserAdapter extends BaseRecyclerAdapter<MUser> {
+    public UserAdapter(Context context, List<MUser> data) {
         super(context, data);
     }
 
-    public FollowingUserAdapter(Context context) {
+    public UserAdapter(Context context) {
         super(context);
     }
 

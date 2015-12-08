@@ -26,6 +26,7 @@ public class SearchFragment extends TimeLineFragment {
 
     SearchView editText;
 
+    String mSearchContent;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,13 +46,13 @@ public class SearchFragment extends TimeLineFragment {
         editText.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-
+                mSearchContent = query;
+                getPostList();
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                getPostList(newText);
                 return true;
             }
         });
@@ -59,9 +60,9 @@ public class SearchFragment extends TimeLineFragment {
 
 
     @Override
-    void getPostList(String filter) {
-        if(!TextUtils.isEmpty(filter)) {
-            MPostApi.searchPosts(filter, new FindListener<MPost>() {
+    void getPostList() {
+        if (!TextUtils.isEmpty(mSearchContent)) {
+            MPostApi.searchPosts(mSearchContent, new FindListener<MPost>() {
                 @Override
                 public void onSuccess(List<MPost> list) {
                     if (!Utils.checkListEmpty(list)) {
@@ -87,7 +88,10 @@ public class SearchFragment extends TimeLineFragment {
                     setRefreshingState(false);
                     setLoadingState(false);
                 }
-            });
+            }, mPage);
+        } else {
+            setRefreshingState(false);
+            setLoadingState(false);
         }
     }
 

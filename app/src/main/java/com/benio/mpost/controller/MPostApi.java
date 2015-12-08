@@ -4,9 +4,10 @@ import android.content.Context;
 
 import com.benio.mpost.app.AppContext;
 import com.benio.mpost.bean.Comment;
-import com.benio.mpost.bean.MLike;
+import com.benio.mpost.bean.ForbiddenUser;
 import com.benio.mpost.bean.MPost;
 import com.benio.mpost.bean.MUser;
+import com.benio.mpost.bean.PostVisibility;
 import com.benio.mpost.consts.Column;
 import com.benio.mpost.consts.Constant;
 import com.benio.mpost.interf.Response;
@@ -33,6 +34,80 @@ import cn.bmob.v3.listener.FindListener;
 public class MPostApi {
 
     static final String TAG = MPostApi.class.getSimpleName();
+
+    /**
+     * 禁止用户发帖
+     *
+     * @param user
+     * @param listener
+     */
+    public static void forbidUser(MUser user, Response listener) {
+        ForbiddenUser forbiddenUser = new ForbiddenUser();
+        forbiddenUser.setUser(user);
+        forbiddenUser.setStatus(0);
+        forbiddenUser.save(getContext(), listener.save());
+    }
+
+    /**
+     * 重新允许用户发帖
+     *
+     * @param forbiddenUser
+     */
+    public static void recoverUser(ForbiddenUser forbiddenUser, Response listener) {
+        forbiddenUser.delete(getContext(), listener.delete());
+    }
+
+    /**
+     * 获取用户列表
+     *
+     * @param listener
+     * @param page
+     */
+    public static void getUserList(final FindListener<MUser> listener, int page) {
+        BmobQuery<MUser> query = new BmobQuery<>();
+        query.include(Column.ForbiddenUser.USER);
+        query.setSkip(page * Constant.QUERY_LIMIT);
+        query.setLimit(Constant.QUERY_LIMIT);
+        query.findObjects(getContext(), listener);
+    }
+
+    /**
+     * 获取禁止发帖用户
+     *
+     * @param listener
+     */
+    public static void getForbiddenUserList(final FindListener<ForbiddenUser> listener, int page) {
+        BmobQuery<ForbiddenUser> query = new BmobQuery<>();
+        query.include(Column.ForbiddenUser.USER);
+        query.setSkip(page * Constant.QUERY_LIMIT);
+        query.setLimit(Constant.QUERY_LIMIT);
+        query.findObjects(getContext(), listener);
+    }
+
+    /**
+     * 更新post可见性
+     *
+     * @param post
+     * @param visible
+     * @param listener
+     */
+    public static void updatePostVisiblity(MPost post, boolean visible, final Response listener) {
+        post.setVisibility(visible ? PostVisibility.PUBLIC.getVisibility() : PostVisibility.PRIVATE.getVisibility());
+        post.update(getContext(), listener.update());
+    }
+
+    /**
+     * 查询用户是否被屏蔽
+     *
+     * @param me
+     * @param listener
+     */
+    public static void isForbidden(MUser me, FindListener<ForbiddenUser> listener) {
+        BmobQuery<ForbiddenUser> query = new BmobQuery<>();
+        query.addWhereEqualTo(Column.ForbiddenUser.USER, new BmobPointer(me));
+        query.include(Column.ForbiddenUser.USER);
+        query.findObjects(getContext(), listener);
+    }
 
     /**
      * 获取关注用户列表
@@ -84,9 +159,9 @@ public class MPostApi {
     public static void getLikeRankList(FindListener<MPost> listener) {
         BmobQuery<MPost> query = new BmobQuery<>();
         query.include(Column.Post.AUTHOR);
-//        query.setCachePolicy(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);
         query.setLimit(Constant.LIKE_RANK_NUM);
         query.order(Column.Post.REVERSE_LIKE_COUNT + "," + Column.Post.REVERSE_CREATED_AT);
+        query.addWhereNotEqualTo(Column.Post.VISIBILITY, PostVisibility.PRIVATE.getVisibility());
         query.findObjects(getContext(), listener);
     }
 
@@ -116,7 +191,7 @@ public class MPostApi {
         query.and(queries);
         query.include(Column.Post.AUTHOR);
         query.setLimit(Constant.LIKE_RANK_NUM);
-//        query.order(Column.Post.REVERSE_LIKE_COUNT + "," + Column.Post.REVERSE_CREATED_AT);
+        query.addWhereNotEqualTo(Column.Post.VISIBILITY, PostVisibility.PRIVATE.getVisibility());
         query.findObjects(getContext(), listener);
     }
 
@@ -129,6 +204,10 @@ public class MPostApi {
     public static void getUserPostList(MUser user, FindListener<MPost> listener) {
         BmobQuery<MPost> query = new BmobQuery<>();
         query.addWhereEqualTo(Column.Post.AUTHOR, new BmobPointer(user));
+        MUser me = AppContext.getInstance().getUser();
+        if (!me.equals(user)) {
+            query.addWhereNotEqualTo(Column.Post.VISIBILITY, PostVisibility.PRIVATE.getVisibility());
+        }
         query.include(Column.Post.AUTHOR);
         query.setLimit(Constant.QUERY_LIMIT);
         query.order(Column.Post.REVERSE_CREATED_AT);
@@ -184,30 +263,6 @@ public class MPostApi {
         post.update(getContext(), listener.update());
     }
 
-    public static void updateLike(MUser user, MPost post, boolean isLiked, Response listener) {
-        MLike mLike = new MLike();
-        mLike.setFromUser(user);
-        mLike.setToUser(post.getAuthor());
-        mLike.setPost(post);
-        mLike.save(getContext(), listener.save());
-    }
-
-    /**
-     * 显示个人点赞 post
-     *
-     * @param user
-     * @param listener
-     */
-    public static void getMyLikePost(MUser user, FindListener<MPost> listener) {
-        BmobQuery<MPost> query = new BmobQuery<>();
-        query.addWhereRelatedTo(Column.User.LIKE_RELATION, new BmobPointer(user));
-        query.include(Column.Post.AUTHOR);
-        query.order(Column.Post.REVERSE_CREATED_AT);
-        query.setLimit(Constant.QUERY_LIMIT);
-        query.findObjects(getContext(), listener);
-    }
-
-
     /**
      * 收藏帖/收藏赞
      *
@@ -259,6 +314,7 @@ public class MPostApi {
     public static void getMyLikePost(MUser user, FindListener<MPost> listener, int page) {
         BmobQuery<MPost> query = new BmobQuery<>();
         query.addWhereRelatedTo(Column.User.LIKE_RELATION, new BmobPointer(user));
+        query.addWhereNotEqualTo(Column.Post.VISIBILITY, PostVisibility.PRIVATE.getVisibility());
         query.include(Column.Post.AUTHOR);
         query.order(Column.Post.REVERSE_CREATED_AT);
         int num = Constant.QUERY_LIMIT;
@@ -276,6 +332,7 @@ public class MPostApi {
     public static void getMyFavouritePost(MUser user, FindListener<MPost> listener, int page) {
         BmobQuery<MPost> query = new BmobQuery<>();
         query.addWhereRelatedTo(Column.User.FAV_RELATION, new BmobPointer(user));
+        query.addWhereNotEqualTo(Column.Post.VISIBILITY, PostVisibility.PRIVATE.getVisibility());
         query.include(Column.Post.AUTHOR);
         query.order(Column.Post.REVERSE_CREATED_AT);
         int num = Constant.QUERY_LIMIT;
@@ -301,20 +358,6 @@ public class MPostApi {
         }
         me.setFollowRelation(relation);
         me.update(getContext(), listener.update());
-    }
-
-    /**
-     * 个人正在关注的用户
-     *
-     * @param user
-     * @param listener
-     */
-    public static void getMyFollowingUser(MUser user, FindListener<MUser> listener) {
-        BmobQuery<MUser> query = new BmobQuery<>();
-        query.addWhereRelatedTo(Column.User.FOLLOW_RELATION, new BmobPointer(user));
-        query.setLimit(Constant.QUERY_LIMIT);
-        query.order(Column.Base.REVERSE_CREATED_AT);
-        query.findObjects(getContext(), listener);
     }
 
     /**
@@ -366,6 +409,8 @@ public class MPostApi {
         int num = Constant.QUERY_LIMIT;
         query.setSkip(page * num);
         query.setLimit(num);
+        //去除私有的贴
+        query.addWhereNotEqualTo(Column.Post.VISIBILITY, PostVisibility.PRIVATE.getVisibility());
         query.order(Column.Post.REVERSE_CREATED_AT);
 //        query.setCachePolicy(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);    // 先从缓存获取数据，如果没有，再从网络获取。
         query.findObjects(getContext(), listener);
@@ -425,12 +470,15 @@ public class MPostApi {
 
     /**
      * 搜索贴列表
+     *
      * @param content
      * @param listener
      */
-    public static void searchPosts(String content,FindListener<MPost> listener){
+    public static void searchPosts(String content, FindListener<MPost> listener, int page) {
         BmobQuery<MPost> query = new BmobQuery<>();
         query.include(Column.Post.AUTHOR);
+        query.setSkip(page * Constant.QUERY_LIMIT);
+        query.setLimit(Constant.QUERY_LIMIT);
         query.addWhereContains(Column.Post.CONTENT, content);
         query.order(Column.Post.REVERSE_CREATED_AT);
         query.findObjects(getContext(), listener);

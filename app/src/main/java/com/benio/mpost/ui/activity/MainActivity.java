@@ -149,11 +149,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         AKView.setHomeIndicator(this, R.mipmap.ic_menu);
 
         mNavigationView.setNavigationItemSelectedListener(this);
-
+        //选中首页
+        MenuItem item = mNavigationView.getMenu().findItem(R.id.action_home);
+        onNavigationItemSelected(item);
         setupUser();
 
-        mFragment = new WeakReference<Fragment>(new TimeLineFragment());
-        replaceFragment(mFragment.get());
+//        mFragment = new WeakReference<Fragment>(new TimeLineFragment());
+//        replaceFragment(mFragment.get());
     }
 
     /**

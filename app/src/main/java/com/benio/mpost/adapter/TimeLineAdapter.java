@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.benio.mpost.R;
 import com.benio.mpost.bean.MPost;
@@ -111,8 +112,13 @@ public class TimeLineAdapter extends BaseRecyclerAdapter<MPost> {
             recyclerView.setLayoutManager(manager);
             recyclerView.setAdapter(adapter);
         }
-        holder.getTextView(R.id.tv_item_favor_count).setText("" + data.getFavorCount());
-        holder.getTextView(R.id.tv_item_like_count).setText("" + data.getLikeCount());
+        TextView favorTextView = holder.getTextView(R.id.tv_item_favor_count);
+        //类设计不合理，这里全部设为不选中，以防View数据错位
+//        favorTextView.setSelected(false);
+        favorTextView.setText("" + data.getFavorCount());
+        TextView likeTextView = holder.getTextView(R.id.tv_item_like_count);
+        likeTextView.setText("" + data.getLikeCount());
+//        likeTextView.setSelected(false);
         holder.getView(R.id.recycler_view).setEnabled(false);
     }
 

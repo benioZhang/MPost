@@ -51,7 +51,7 @@ public class MPost extends BmobObject implements Serializable {
      * 可见性：公开，私有
      * {@link PostVisibility}
      */
-    private Integer visibility;
+    private int visibility;
 
     public String getContent() {
         return content;

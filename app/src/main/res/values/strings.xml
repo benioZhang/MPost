@@ -67,5 +67,7 @@
     <string name="title_post_visible">谁可以看</string>
     <string name="title_comment">评论</string>
     <string name="title_post_detail">详情</string>
-    <string name="title_like_rand">点赞榜</string>
+    <string name="title_like_rank">点赞榜</string>
+    <string name="title_forbidden_user">限制用户</string>
+    <string name="title_user_admin">用户管理</string>
 </resources>
