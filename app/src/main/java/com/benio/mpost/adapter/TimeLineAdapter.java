@@ -29,7 +29,12 @@ public class TimeLineAdapter extends BaseRecyclerAdapter<MPost> {
 
     public TimeLineAdapter(Context context, List<MPost> data) {
         super(context, data);
-        mSpanCount = context.getResources().getInteger(R.integer.thumbnail_span_count);
+        /**
+         *   java.lang.NullPointerException:
+         *    Attempt to invoke virtual method 'android.content.res.Resources android.content.Context.getResources()' on a null object reference
+         */
+//        mSpanCount = context.getResources().getInteger(R.integer.thumbnail_span_count);
+        mSpanCount = 3;
     }
 
     @Override

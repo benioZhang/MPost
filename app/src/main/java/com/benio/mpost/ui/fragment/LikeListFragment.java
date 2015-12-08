@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class LikeListFragment extends TimeLineFragment {
 
-    void getPostList() {
+    void getPostList(String filter) {
         MPostApi.getMyLikePost(AppContext.getInstance().getUser(), new QueryListener<MPost>() {
             @Override
             public void onFailure(int code, String msg) {

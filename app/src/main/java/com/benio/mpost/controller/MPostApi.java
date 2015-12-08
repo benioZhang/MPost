@@ -412,6 +412,19 @@ public class MPostApi {
         });
     }
 
+    /**
+     * 搜索贴列表
+     * @param content
+     * @param listener
+     */
+    public static void searchPosts(String content,FindListener<MPost> listener){
+        BmobQuery<MPost> query = new BmobQuery<>();
+        query.include(Column.Post.AUTHOR);
+        query.addWhereContains(Column.Post.CONTENT, content);
+        query.order(Column.Post.REVERSE_CREATED_AT);
+        query.findObjects(getContext(), listener);
+    }
+
 
     /**
      * 注册
