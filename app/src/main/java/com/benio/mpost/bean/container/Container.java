@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 
 import com.benio.mpost.R;
 import com.benio.mpost.ui.fragment.AlbumFragment;
+import com.benio.mpost.ui.fragment.ForbiddenUserFragment;
 import com.benio.mpost.ui.fragment.LikeRankFragment;
 import com.benio.mpost.ui.fragment.LoginFragment;
 import com.benio.mpost.ui.fragment.PostDetailFragment;
@@ -13,6 +14,7 @@ import com.benio.mpost.ui.fragment.PostVisibilityFragment;
 import com.benio.mpost.ui.fragment.PublishPostFragment;
 import com.benio.mpost.ui.fragment.RegisterFragment;
 import com.benio.mpost.ui.fragment.SearchFragment;
+import com.benio.mpost.ui.fragment.UserAdminFragment;
 
 /**
  * FragmentContainer
@@ -55,9 +57,20 @@ public class Container {
     public static final int RANKING_LIST = 8;
 
     /**
+     * 查看禁止发帖用户
+     */
+    public static final int FORBIDDEN_USER = 9;
+
+    /**
+     * 用户管理，用于屏蔽用户
+     */
+    public static final int USER_ADMIN = 10;
+
+    /**
      * 防止使用不是Container的id
      */
-    @IntDef({LOGIN, REGISTER, ALBUM, PUBLISH_POST, SEARCH, POST_VISIBLE, POST_DETAIL, RANKING_LIST})
+    @IntDef({LOGIN, REGISTER, ALBUM, PUBLISH_POST, SEARCH, POST_VISIBLE, POST_DETAIL,
+            RANKING_LIST, FORBIDDEN_USER, USER_ADMIN})
     public @interface ContainerType {
     }
 
@@ -125,7 +138,17 @@ public class Container {
 
             case RANKING_LIST:
                 container.clazz = LikeRankFragment.class;
-                container.title = 0;
+                container.title = R.string.title_like_rank;
+                break;
+
+            case FORBIDDEN_USER:
+                container.clazz = ForbiddenUserFragment.class;
+                container.title = R.string.title_forbidden_user;
+                break;
+
+            case USER_ADMIN:
+                container.clazz = UserAdminFragment.class;
+                container.title = R.string.title_user_admin;
                 break;
 
             default:

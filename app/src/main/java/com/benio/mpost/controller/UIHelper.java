@@ -21,6 +21,29 @@ import com.benio.mpost.ui.fragment.PostDetailFragment;
 public class UIHelper {
 
 
+    /**
+     * 显示用户管理页面
+     *
+     * @param activity
+     */
+    public static void showUserAdmin(Activity activity) {
+        showFragmentContainer(activity, Container.USER_ADMIN);
+    }
+
+    /**
+     * 显示禁止发帖用户列表
+     *
+     * @param activity
+     */
+    public static void showForbiddenUser(Activity activity) {
+        showFragmentContainer(activity, Container.FORBIDDEN_USER);
+    }
+
+    /**
+     * 显示点赞榜
+     *
+     * @param activity
+     */
     public static void showLikeRankingList(Activity activity) {
         showFragmentContainer(activity, Container.RANKING_LIST);
     }

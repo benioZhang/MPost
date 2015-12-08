@@ -22,6 +22,7 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<Recycl
     private List<T> mData;
     private Context mContext;
     private AdapterView.OnItemClickListener mOnItemClickListener;
+    private AdapterView.OnItemLongClickListener mOnItemLongClickListener;
 
     public BaseRecyclerAdapter(Context context) {
         this(context, null);
@@ -58,6 +59,15 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<Recycl
                 }
             });
         }
+        if (mOnItemLongClickListener != null) {
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    return mOnItemLongClickListener.onItemLongClick(null, v, holder.getLayoutPosition(), holder.getItemId());
+                }
+            });
+        }
+
         onBindViewHolder(holder, getItem(holder.getLayoutPosition()));
     }
 
@@ -159,5 +169,9 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<Recycl
 
     public void setOnItemClickListener(AdapterView.OnItemClickListener onItemClickListener) {
         this.mOnItemClickListener = onItemClickListener;
+    }
+
+    public void setOnItemLongClickListener(AdapterView.OnItemLongClickListener l) {
+        this.mOnItemLongClickListener = l;
     }
 }

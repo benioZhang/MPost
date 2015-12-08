@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.benio.mpost.R;
 import com.benio.mpost.app.AppManager;
+import com.benio.mpost.consts.Constant;
 import com.benio.mpost.controller.MPostApi;
 import com.benio.mpost.controller.UIHelper;
 import com.benio.mpost.interf.impl.ResponseListener;
@@ -21,14 +22,20 @@ import butterknife.OnClick;
  * Created by benio on 2015/10/10.
  */
 public class LoginFragment extends BaseFragment {
-    /** 账号输入Layout */
+    /**
+     * 账号输入Layout
+     */
     @Bind(R.id.til_account)
     TextInputLayout mAccountInputLayout;
-    /** 密码输入Layout */
+    /**
+     * 密码输入Layout
+     */
     @Bind(R.id.til_pwd)
     TextInputLayout mPwdInputLayout;
 
-    /** 登陆按钮 */
+    /**
+     * 登陆按钮
+     */
 //    @Bind(R.id.btn_login)
 //    Button mLoginBtn;
     @Override
@@ -40,13 +47,17 @@ public class LoginFragment extends BaseFragment {
     protected void initView(@Nullable View view) {
     }
 
-    /** 点击注册按钮事件 */
+    /**
+     * 点击注册按钮事件
+     */
     @OnClick(R.id.btn_register)
     protected void onRegisterEvent() {
         UIHelper.showRegister(getActivity());
     }
 
-    /** 点击登陆按钮事件 */
+    /**
+     * 点击登陆按钮事件
+     */
     @OnClick(R.id.btn_login)
     protected void onLoginEvent() {
         if (!validateInput()) {
@@ -55,6 +66,13 @@ public class LoginFragment extends BaseFragment {
 
         String account = AKView.getText(mAccountInputLayout);
         String password = AKView.getText(mPwdInputLayout);
+
+        if (account.equals(Constant.ADMIN_ACCOUNT) && password.equals(Constant.ADMIN_PWD)) {
+            UIHelper.showForbiddenUser(getActivity());
+            //finish this activity
+            AppManager.getInstance().finishActivity(getActivity());
+            return;
+        }
 
         MPostApi.login(account, password, new ResponseListener() {
             @Override

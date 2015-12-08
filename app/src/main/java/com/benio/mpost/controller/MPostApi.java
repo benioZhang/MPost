@@ -35,6 +35,62 @@ public class MPostApi {
 
     static final String TAG = MPostApi.class.getSimpleName();
 
+    /**
+     * 禁止用户发帖
+     *
+     * @param user
+     * @param listener
+     */
+    public static void forbidUser(MUser user, Response listener) {
+        ForbiddenUser forbiddenUser = new ForbiddenUser();
+        forbiddenUser.setUser(user);
+        forbiddenUser.setStatus(0);
+        forbiddenUser.save(getContext(), listener.save());
+    }
+
+    /**
+     * 重新允许用户发帖
+     *
+     * @param forbiddenUser
+     */
+    public static void recoverUser(ForbiddenUser forbiddenUser, Response listener) {
+        forbiddenUser.delete(getContext(), listener.delete());
+    }
+
+    /**
+     * 获取用户列表
+     *
+     * @param listener
+     * @param page
+     */
+    public static void getUserList(final FindListener<MUser> listener, int page) {
+        BmobQuery<MUser> query = new BmobQuery<>();
+        query.include(Column.ForbiddenUser.USER);
+        query.setSkip(page * Constant.QUERY_LIMIT);
+        query.setLimit(Constant.QUERY_LIMIT);
+        query.findObjects(getContext(), listener);
+    }
+
+    /**
+     * 获取禁止发帖用户
+     *
+     * @param listener
+     */
+    public static void getForbiddenUserList(final FindListener<ForbiddenUser> listener, int page) {
+        BmobQuery<ForbiddenUser> query = new BmobQuery<>();
+        query.include(Column.ForbiddenUser.USER);
+        query.setSkip(page * Constant.QUERY_LIMIT);
+        query.setLimit(Constant.QUERY_LIMIT);
+        query.findObjects(getContext(), listener);
+    }
+
+    /**
+     * 更新post可见性
+     *
+     * @param post
+     * @param visible
+     * @param listener
+     */
     public static void updatePostVisiblity(MPost post, boolean visible, final Response listener) {
         post.setVisibility(visible ? PostVisibility.PUBLIC.getVisibility() : PostVisibility.PRIVATE.getVisibility());
         post.update(getContext(), listener.update());
@@ -414,12 +470,15 @@ public class MPostApi {
 
     /**
      * 搜索贴列表
+     *
      * @param content
      * @param listener
      */
-    public static void searchPosts(String content,FindListener<MPost> listener){
+    public static void searchPosts(String content, FindListener<MPost> listener, int page) {
         BmobQuery<MPost> query = new BmobQuery<>();
         query.include(Column.Post.AUTHOR);
+        query.setSkip(page * Constant.QUERY_LIMIT);
+        query.setLimit(Constant.QUERY_LIMIT);
         query.addWhereContains(Column.Post.CONTENT, content);
         query.order(Column.Post.REVERSE_CREATED_AT);
         query.findObjects(getContext(), listener);
