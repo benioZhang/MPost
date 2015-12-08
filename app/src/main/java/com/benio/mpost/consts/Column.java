@@ -10,7 +10,7 @@ public final class Column {
         String NAME = "name";
         String PROTRAIT = "portraitUrl";
         String FOLLOW_RELATION = "followRelation";
-        String CANNOT_POST="canNotPost";
+        String CANNOT_POST = "canNotPost";
         String FAV_RELATION = "favRelation";
         String LIKE_RELATION = "likeRelation";
     }
@@ -41,10 +41,8 @@ public final class Column {
         String POST = "post";
     }
 
-    public interface Like extends Base {
-        String FROM_USER = "fromUser";
-        String TO_USER = "toUser";
-        String POST = "post";
+    public interface ForbiddenUser extends Base {
+        String USER = "user";
     }
 
 }

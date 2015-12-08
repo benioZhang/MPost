@@ -71,12 +71,7 @@ public class UserDetailActivity extends BaseActivity {
 
         mUserDetail = new UserDetail();
         mUserDetail.setUser(user);
-//        MUser author = AppContext.getInstance().getUser();
-//        if (author.getCanNotPost()) {
-//            hideProgress();
-//            removeAllViews();
-//            AKToast.show(getBaseContext(), "你被禁止状态，无法查看内容，解封请联系管理员");
-//        } else {
+
         MPostApi.getUserPostList(user, new QueryListener<MPost>() {
             @Override
             public void onFailure(int code, String msg) {
@@ -88,10 +83,9 @@ public class UserDetailActivity extends BaseActivity {
 
             @Override
             public void onSuccess(List<MPost> list) {
-                if (!Utils.checkListEmpty(list)) {
-                    mUserDetail.setPostList(list);
-                    checkReady();
-                } else {
+                checkReady();
+                mUserDetail.setPostList(list);
+                if (Utils.checkListEmpty(list)) {
                     AKToast.show(UserDetailActivity.this, "还没有发过说说哦～");
                 }
             }
@@ -118,12 +112,7 @@ public class UserDetailActivity extends BaseActivity {
             }
         });
     }
-//    }
 
-    private void removeAllViews() {
-        mRecyclerView.setVisibility(View.GONE);
-        mFloatingActionButton.setVisibility(View.GONE);
-    }
 
     /**
      * 检查是否已经加载完毕

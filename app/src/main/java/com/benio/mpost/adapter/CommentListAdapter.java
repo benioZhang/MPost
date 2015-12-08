@@ -38,8 +38,12 @@ public class CommentListAdapter extends BaseRecyclerAdapter<Comment> {
         MUser toUser = data.getToUser();
         holder.getTextView(R.id.tv_user_name).setText(fromUser.getUsername());
         holder.getTextView(R.id.tv_item_time).setText(data.getCreatedAt());
-        if (toUser != null && toUser.equals(me)) {
-            holder.getTextView(R.id.tv_comment_content).setText("回复了你: " + data.getContent());
+        if (toUser != null) {
+            if (toUser.equals(me)) {
+                holder.getTextView(R.id.tv_comment_content).setText("回复了你: " + data.getContent());
+            } else {
+                holder.getTextView(R.id.tv_comment_content).setText("回复" + toUser.getName() + "：" + data.getContent());
+            }
         } else {
             holder.getTextView(R.id.tv_comment_content).setText("评论内容: " + data.getContent());
         }

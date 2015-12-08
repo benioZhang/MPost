@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 
+import com.benio.mpost.bean.ForbiddenUser;
 import com.benio.mpost.bean.MPost;
 import com.benio.mpost.bean.MUser;
 
@@ -60,4 +61,17 @@ public class Utils {
         }
         return false;
     }
+
+    public static boolean isForbiddenUser(MUser user, List<ForbiddenUser> list) {
+        if (list != null) {
+            for (ForbiddenUser u : list) {
+                MUser tmp = u.getUser();
+                if (tmp != null && tmp.equals(user)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 }

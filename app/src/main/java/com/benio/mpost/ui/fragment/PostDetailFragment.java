@@ -17,6 +17,7 @@ import com.benio.mpost.bean.Comment;
 import com.benio.mpost.bean.MPost;
 import com.benio.mpost.bean.MUser;
 import com.benio.mpost.bean.PostDetail;
+import com.benio.mpost.bean.PostVisibility;
 import com.benio.mpost.controller.MPostApi;
 import com.benio.mpost.controller.UIHelper;
 import com.benio.mpost.interf.impl.QueryListener;
@@ -68,7 +69,8 @@ public class PostDetailFragment extends BaseFragment {
     View mCommentLayout;
     @Bind(R.id.et_comment)
     EditText mCommentEditText;
-
+    @Bind(R.id.tv_post_detail_visibility)
+    TextView mVisibilityTextView;
     private PostDetail mPostDetail;
     private BaseRecyclerAdapter<Comment> mAdapter;
     //回复对象，没有则为Null
@@ -81,11 +83,12 @@ public class PostDetailFragment extends BaseFragment {
 
     @Override
     protected void initView(View view) {
-        MPost post = mPostDetail.getPost();
+        final MPost post = mPostDetail.getPost();
         final MUser author = post.getAuthor();
         mNameTextView.setText(author.getName());
         mTimeTextView.setText(post.getCreatedAt());
         mContentTextView.setText(post.getContent());
+
         //set author portrait
         if (author.hasPortrait()) {
             ImageLoader.getInstance(this).load(mAuthorImageView, author.getPortraitUrl(), R.mipmap.user_default_header);
@@ -113,6 +116,38 @@ public class PostDetailFragment extends BaseFragment {
             mPhotoRecyclerView.setAdapter(adapter);
             mPhotoRecyclerView.setLayoutManager(layoutManager);
         }
+
+        MUser me = AppContext.getInstance().getUser();
+        boolean isMyPost = me.equals(author);
+        AKView.setViewVisible(mVisibilityTextView, isMyPost);
+        if (!isMyPost) {
+            //post作者不是自己则不设置下面的
+            return;
+        }
+        setupVisibleStatus(PostVisibility.isVisible(post.getVisibility()));
+        mVisibilityTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final boolean visible = !PostVisibility.isVisible(post.getVisibility());
+                MPostApi.updatePostVisiblity(post, visible, new ResponseListener() {
+                    @Override
+                    public void onFailure(int code, String msg) {
+                        ErrorLog.log(code, msg);
+                        showToast("设置可见性失败");
+                    }
+
+                    @Override
+                    public void onSuccess() {
+                        AKLog.d("xxxx", "update post visible " + visible);
+                        setupVisibleStatus(visible);
+                    }
+                });
+            }
+        });
+    }
+
+    private void setupVisibleStatus(boolean visibleStatus) {
+        mVisibilityTextView.setText(visibleStatus ? "设为私有" : "设为公开");
     }
 
     @Override
@@ -128,6 +163,14 @@ public class PostDetailFragment extends BaseFragment {
 
         mPostDetail = new PostDetail();
         mPostDetail.setPost(post);
+
+        MUser me = AppContext.getInstance().getUser();
+        //如果不是post作者则屏蔽
+        if (!me.equals(post.getAuthor()) && post.getVisibility() == PostVisibility.PRIVATE.getVisibility()) {
+            showToast("该贴已被屏蔽");
+            getActivity().finish();
+            return;
+        }
 
         final MUser user = AppContext.getInstance().getUser();
 

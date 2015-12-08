@@ -17,16 +17,19 @@ import com.benio.mpost.R;
 import com.benio.mpost.adapter.BaseRecyclerAdapter;
 import com.benio.mpost.adapter.ThumbnailAdapter;
 import com.benio.mpost.app.AppContext;
-import com.benio.mpost.app.AppManager;
+import com.benio.mpost.bean.ForbiddenUser;
 import com.benio.mpost.bean.MPost;
 import com.benio.mpost.bean.MUser;
 import com.benio.mpost.bean.PostVisibility;
 import com.benio.mpost.controller.MPostApi;
 import com.benio.mpost.controller.UIHelper;
+import com.benio.mpost.interf.impl.QueryListener;
 import com.benio.mpost.interf.impl.ResponseListener;
 import com.benio.mpost.util.AKLog;
 import com.benio.mpost.util.AKToast;
 import com.benio.mpost.util.AKView;
+import com.benio.mpost.util.ErrorLog;
+import com.benio.mpost.util.Utils;
 import com.benio.mpost.widget.DividerGridItemDecoration;
 
 import java.util.ArrayList;
@@ -194,30 +197,41 @@ public class PublishPostFragment extends RecyclerFragment implements AdapterView
 
         showProgress(R.string.publishing);
 
-        String content = AKView.getText(mPostContentEditText);
-        MUser author = AppContext.getInstance().getUser();
-        if (author.getCanNotPost()) {
-            hideProgress();
-            AKToast.show(getActivity(), "你被禁止发帖，解封请联系管理员");
-            getActivity().finish();
-        } else {
-            MPostApi.publishPost(author, content, mPostPhotoList, mVisibility, new ResponseListener() {
-                @Override
-                public void onSuccess() {
-                    hideProgress();
-                    AKLog.d(getString(R.string.info_publish_post_success));
-                    showToast(R.string.info_publish_post_success);
-                    getActivity().setResult(Activity.RESULT_OK);
-                    getActivity().finish();
-                }
+        final String content = AKView.getText(mPostContentEditText);
+        final MUser author = AppContext.getInstance().getUser();
+        MPostApi.isForbidden(author, new QueryListener<ForbiddenUser>() {
+            @Override
+            public void onFailure(int code, String msg) {
+                ErrorLog.log(code, msg);
+            }
 
-                @Override
-                public void onFailure(int code, String msg) {
-                    AKLog.d("失败 " + "code " + code + "  msg  " + msg);
-                    showToast(R.string.info_publish_post_failure);
+            @Override
+            public void onSuccess(List<ForbiddenUser> list) {
+                AKLog.d("xxx", "forbidden list " + list.toString());
+                if (Utils.isForbiddenUser(author, list)) {
+                    hideProgress();
+                    AKToast.show(getActivity(), "你被禁止发帖，解封请联系管理员");
+                    getActivity().finish();
+                } else {
+                    MPostApi.publishPost(author, content, mPostPhotoList, mVisibility, new ResponseListener() {
+                        @Override
+                        public void onSuccess() {
+                            hideProgress();
+                            AKLog.d(getString(R.string.info_publish_post_success));
+                            showToast(R.string.info_publish_post_success);
+                            getActivity().setResult(Activity.RESULT_OK);
+                            getActivity().finish();
+                        }
+
+                        @Override
+                        public void onFailure(int code, String msg) {
+                            AKLog.d("失败 " + "code " + code + "  msg  " + msg);
+                            showToast(R.string.info_publish_post_failure);
+                        }
+                    });
                 }
-            });
-        }
+            }
+        });
     }
 
 }
