@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import com.benio.mpost.interf.ImageListener;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 
 /**
  * 图片加载
@@ -27,11 +28,27 @@ public class ImageLoader implements ImageListener {
     }
 
     public void load(ImageView imageView, String string, @DrawableRes int placeholder) {
-        mManager.load(string).placeholder(placeholder).crossFade().fitCenter().into(imageView);
+        load(imageView, string, placeholder, null);
     }
 
     public void load(ImageView imageView, @DrawableRes int res) {
-        mManager.load(res).crossFade().fitCenter().into(imageView);
+        load(imageView, res, null);
+    }
+
+    public void load(ImageView imageView, @DrawableRes int res, BitmapTransformation transformation) {
+        if (transformation != null) {
+            mManager.load(res).crossFade().fitCenter().transform(transformation).into(imageView);
+        } else {
+            mManager.load(res).crossFade().fitCenter().into(imageView);
+        }
+    }
+
+    public void load(ImageView imageView, String string, @DrawableRes int placeholder, BitmapTransformation transformation) {
+        if (transformation != null) {
+            mManager.load(string).placeholder(placeholder).crossFade().fitCenter().transform(transformation).into(imageView);
+        } else {
+            mManager.load(string).placeholder(placeholder).crossFade().fitCenter().into(imageView);
+        }
     }
 
     public static ImageLoader getInstance(Fragment fragment) {

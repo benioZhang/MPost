@@ -11,6 +11,7 @@ import com.benio.mpost.bean.MPost;
 import com.benio.mpost.bean.MUser;
 import com.benio.mpost.bean.RecyclerHolder;
 import com.benio.mpost.network.ImageLoader;
+import com.benio.mpost.util.image.CircleTransform;
 import com.benio.mpost.widget.FullyGridLayoutManager;
 
 import java.util.List;
@@ -81,9 +82,9 @@ public class TimeLineAdapter extends BaseRecyclerAdapter<MPost> {
         ImageLoader imageLoader = ImageLoader.getInstance(getContext());
         final MUser author = data.getAuthor();
         if (author.hasPortrait()) {
-            imageLoader.load(iv, author.getPortraitUrl(), R.mipmap.user_default_header);
+            imageLoader.load(iv, author.getPortraitUrl(), R.mipmap.user_default_header,new CircleTransform(getContext()));
         } else {
-            imageLoader.load(iv, R.mipmap.user_default_header);
+            imageLoader.load(iv, R.mipmap.user_default_header,new CircleTransform(getContext()));
         }
 
         if (data.hasPhoto()) {

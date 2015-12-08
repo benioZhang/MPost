@@ -38,6 +38,7 @@
 
     <include
         layout="@layout/recycler_view"
+        android:layout_marginRight="3dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 

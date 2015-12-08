@@ -59,7 +59,7 @@ public class ThumbnailAdapter extends BaseRecyclerAdapter<String> {
         ImageLoader imageLoader = ImageLoader.getInstance(getContext());
         if (ADD_THUMBNAIL.equals(data)) {
             iv.setScaleType(ImageView.ScaleType.CENTER);
-            imageLoader.load(iv, R.mipmap.make_post_add);
+            imageLoader.load(iv, R.mipmap.ic_add);
 //            iv.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
 //            Picasso.with(getContext()).load(R.mipmap.make_post_add).fit().into(iv);
         } else {

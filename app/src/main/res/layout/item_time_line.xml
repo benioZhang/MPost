@@ -13,28 +13,32 @@
 
         <include layout="@layout/include_time_line" />
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom">
+            android:layout_gravity="bottom"
+            android:gravity="right">
 
-            <TextView
-                android:id="@+id/tv_item_like_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:drawableLeft="@drawable/bg_like"
-                android:gravity="center_vertical"
-                android:text="0" />
 
             <TextView
                 android:id="@+id/tv_item_favor_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="15dp"
                 android:drawableLeft="@drawable/bg_favor"
                 android:gravity="center_vertical"
                 android:text="0" />
-        </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_item_like_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:layout_toLeftOf="@id/tv_item_favor_count"
+                android:drawableLeft="@drawable/bg_like"
+                android:gravity="center_vertical"
+                android:text="0" />
+        </RelativeLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>

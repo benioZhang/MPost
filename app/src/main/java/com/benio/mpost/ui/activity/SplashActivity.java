@@ -9,7 +9,6 @@ import com.benio.mpost.R;
 import com.benio.mpost.app.AppContext;
 import com.benio.mpost.bean.MUser;
 import com.benio.mpost.controller.UIHelper;
-import com.benio.mpost.network.ImageLoader;
 
 /**
  * 开机页面
@@ -45,6 +44,6 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void initView(@Nullable View view) {
         ImageView iv = (ImageView) findViewById(R.id.iv_splash);
-        ImageLoader.getInstance(this).load(iv, R.mipmap.bg_splash);
+//        ImageLoader.getInstance(this).load(iv, R.mipmap.splash_bg);
     }
 }

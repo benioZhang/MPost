@@ -6,6 +6,7 @@ import com.benio.mpost.R;
 import com.benio.mpost.bean.MUser;
 import com.benio.mpost.bean.RecyclerHolder;
 import com.benio.mpost.network.ImageLoader;
+import com.benio.mpost.util.image.CircleTransform;
 
 import java.util.List;
 
@@ -30,9 +31,10 @@ public class FollowingUserAdapter extends BaseRecyclerAdapter<MUser> {
     public void onBindViewHolder(RecyclerHolder holder, MUser data) {
         holder.getTextView(R.id.tv_following_user).setText(data.getName());
         if (data.hasPortrait()) {
-            ImageLoader.getInstance(getContext()).load(holder.getImageView(R.id.iv_following_user), data.getPortraitUrl());
+//            ImageLoader.getInstance(getContext()).load(holder.getImageView(R.id.iv_following_user), data.getPortraitUrl());
+            ImageLoader.getInstance(getContext()).load(holder.getImageView(R.id.iv_following_user), data.getPortraitUrl(), R.mipmap.user_default_header, new CircleTransform(getContext()));
         } else {
-            ImageLoader.getInstance(getContext()).load(holder.getImageView(R.id.iv_following_user), R.mipmap.ic_user_def_2);
+            ImageLoader.getInstance(getContext()).load(holder.getImageView(R.id.iv_following_user), R.mipmap.user_default_header, new CircleTransform(getContext()));
         }
     }
 }

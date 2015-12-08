@@ -24,6 +24,7 @@ import com.benio.mpost.ui.fragment.LikeListFragment;
 import com.benio.mpost.ui.fragment.TimeLineFragment;
 import com.benio.mpost.util.AKLog;
 import com.benio.mpost.util.AKView;
+import com.benio.mpost.util.image.CircleTransform;
 
 import java.lang.ref.WeakReference;
 
@@ -190,9 +191,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         MUser user = AppContext.getInstance().getUser();
         mNameTextView.setText(user.getName());
         if (user.hasPortrait()) {
-            ImageLoader.getInstance(this).load(mUserImageView, user.getPortraitUrl(), R.mipmap.ic_default_image);
+            ImageLoader.getInstance(this).load(mUserImageView, user.getPortraitUrl(), R.mipmap.user_default_header , new CircleTransform(getApplicationContext()));
         } else {
-            ImageLoader.getInstance(this).load(mUserImageView, R.mipmap.user_default_header);
+            ImageLoader.getInstance(this).load(mUserImageView, R.mipmap.user_default_header,new CircleTransform(getApplicationContext()));
         }
     }
 

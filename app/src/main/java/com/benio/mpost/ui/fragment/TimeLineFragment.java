@@ -216,4 +216,5 @@ public class TimeLineFragment extends RefreshRecyclerFragment {
             }
         });
     }
+
 }

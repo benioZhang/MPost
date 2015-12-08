@@ -1,27 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="single">
+<menu xmlns:android="http://schemas.android.com/apk/res/android" android:checkableBehavior="single">
+    <group android:checkableBehavior="single" android:id="@+id/grp1">
         <item
             android:id="@+id/action_home"
+            android:icon="@mipmap/ic_home_black_24dp"
             android:title="@string/action_home" />
         <item
             android:id="@+id/action_comment"
+            android:icon="@mipmap/ic_color_lens_black_24dp"
             android:title="@string/action_comment" />
         <item
             android:id="@+id/action_follow"
+            android:icon="@mipmap/ic_people_black_24dp"
             android:title="@string/action_follow" />
         <item
             android:id="@+id/action_star"
+            android:icon="@mipmap/ic_star_black_24dp"
             android:title="@string/action_star" />
         <item
             android:id="@+id/action_like"
+            android:icon="@mipmap/ic_shop_black_24dp"
             android:title="@string/action_like" />
     </group>
-    <item android:title="">
-        <menu>
-            <item
-                android:id="@+id/action_logout"
-                android:title="注销" />
-        </menu>
-    </item>
+    <group  android:id="@+id/grp2">
+        <item
+            android:id="@+id/action_logout"
+            android:icon="@mipmap/ic_settings_black_24dp"
+            android:title="注销" />
+    </group>
 </menu>

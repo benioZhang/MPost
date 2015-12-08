@@ -95,4 +95,5 @@ public class SearchFragment extends TimeLineFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         return super.onOptionsItemSelected(item);
     }
+
 }

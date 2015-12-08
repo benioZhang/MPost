@@ -68,11 +68,11 @@ public abstract class RecyclerFragment extends BaseFragment {
             mRecyclerView.setLayoutManager(layout);
         }
 
-        //添加分割线
-        RecyclerView.ItemDecoration decor = onCreateItemDecoration();
-        if (decor != null) {
-            mRecyclerView.addItemDecoration(decor);
-        }
+//        //添加分割线
+//        RecyclerView.ItemDecoration decor = onCreateItemDecoration();
+//        if (decor != null) {
+//            mRecyclerView.addItemDecoration(decor);
+//        }
 
         //设置Item增加、移除动画
         RecyclerView.ItemAnimator animator = onCreateItemAnimator();

@@ -26,6 +26,7 @@ import com.benio.mpost.util.AKLog;
 import com.benio.mpost.util.AKView;
 import com.benio.mpost.util.ErrorLog;
 import com.benio.mpost.util.Utils;
+import com.benio.mpost.util.image.CircleTransform;
 import com.benio.mpost.widget.FullyGridLayoutManager;
 import com.benio.mpost.widget.FullyLinearLayoutManager;
 
@@ -88,9 +89,9 @@ public class PostDetailFragment extends BaseFragment {
         mContentTextView.setText(post.getContent());
         //set author portrait
         if (author.hasPortrait()) {
-            ImageLoader.getInstance(this).load(mAuthorImageView, author.getPortraitUrl(), R.mipmap.user_default_header);
+            ImageLoader.getInstance(this).load(mAuthorImageView, author.getPortraitUrl(), R.mipmap.user_default_header,new CircleTransform(getActivity()));
         } else {
-            ImageLoader.getInstance(this).load(mAuthorImageView, R.mipmap.user_default_header);
+            ImageLoader.getInstance(this).load(mAuthorImageView, R.mipmap.user_default_header , new CircleTransform(getActivity()));
         }
         mAuthorImageView.setOnClickListener(new View.OnClickListener() {
             @Override

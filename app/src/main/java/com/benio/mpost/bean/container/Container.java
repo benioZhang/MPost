@@ -110,7 +110,7 @@ public class Container {
 
             case SEARCH:
                 container.clazz = SearchFragment.class;
-//                container.title = R.string.title_search;
+                container.title = R.string.title_search;
                 break;
 
             case POST_VISIBLE:
