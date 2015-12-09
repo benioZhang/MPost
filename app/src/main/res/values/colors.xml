@@ -2,10 +2,10 @@
 <resources>
 
     <!--<color name="primary">#0b74b7</color>-->
-    <color name="primary">#F06292</color>
+    <color name="primary">#4b81f5</color>
     <!--<color name="primary_dark">#0540a8</color>-->
-    <color name="primary_dark">#AD1457</color>
-    <color name="primary_weak">#F06292</color>
+    <color name="primary_dark">#141f9c</color>
+    <color name="primary_weak">#485ebf</color>
     <color name="accent">#758cff</color>
 
     <color name="divider">#c0bac1</color>
