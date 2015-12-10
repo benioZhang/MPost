@@ -70,4 +70,10 @@
     <string name="title_like_rank">点赞榜</string>
     <string name="title_forbidden_user">限制用户</string>
     <string name="title_user_admin">用户管理</string>
+
+    <string-array name="camera_gallery">
+        <item>相机</item>
+        <item>图片</item>
+    </string-array>
+
 </resources>

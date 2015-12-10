@@ -23,6 +23,7 @@ import com.benio.mpost.bean.MUser;
 import com.benio.mpost.bean.PostVisibility;
 import com.benio.mpost.controller.MPostApi;
 import com.benio.mpost.controller.UIHelper;
+import com.benio.mpost.event.UpdateMainActivityEvent;
 import com.benio.mpost.interf.impl.QueryListener;
 import com.benio.mpost.interf.impl.ResponseListener;
 import com.benio.mpost.util.AKLog;
@@ -38,6 +39,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.OnClick;
+import de.greenrobot.event.EventBus;
 
 /**
  * 发帖
@@ -220,6 +222,7 @@ public class PublishPostFragment extends RecyclerFragment implements AdapterView
                             AKLog.d(getString(R.string.info_publish_post_success));
                             showToast(R.string.info_publish_post_success);
                             getActivity().setResult(Activity.RESULT_OK);
+                            EventBus.getDefault().post(new UpdateMainActivityEvent());
                             getActivity().finish();
                         }
 

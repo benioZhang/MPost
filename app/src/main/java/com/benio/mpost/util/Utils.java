@@ -1,13 +1,23 @@
 package com.benio.mpost.util;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 
+import com.benio.mpost.app.AppConfig;
 import com.benio.mpost.bean.ForbiddenUser;
 import com.benio.mpost.bean.MPost;
 import com.benio.mpost.bean.MUser;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -72,6 +82,87 @@ public class Utils {
             }
         }
         return false;
+    }
+
+    /**
+     * 压缩图片
+     *
+     * @param ImgPath
+     * @return
+     */
+    public static String getCompressImage(String ImgPath) {
+        Bitmap bitmap;
+        File outputFile = new File(ImgPath);
+        long fileSize = outputFile.length();
+        final long fileMaxSize = 30 * 1024;
+        if (fileSize >= fileMaxSize) {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(ImgPath, options);
+            int height = options.outHeight;
+            int width = options.outWidth;
+
+            double scale = Math.sqrt((float) fileSize / fileMaxSize);
+            options.outHeight = (int) (height / scale);
+            options.outWidth = (int) (width / scale);
+            options.inSampleSize = (int) (scale + 0.5);
+            options.inJustDecodeBounds = false;
+
+            bitmap = BitmapFactory.decodeFile(ImgPath);
+        } else {
+            bitmap = BitmapFactory.decodeFile(ImgPath);
+        }
+        try {
+            outputFile = new File(getOutputMediaFileUri().getPath());
+            FileOutputStream fos = new FileOutputStream(outputFile);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, fos);
+            fos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (!bitmap.isRecycled()) {
+            bitmap.recycle();
+        }
+
+        return outputFile.getAbsolutePath();
+
+    }
+
+    public static Uri getOutputMediaFileUri() {
+        String mediaStorageDir = AppConfig.DEFAULT_SAVE_IMAGE_PATH + File.separator + "camera";
+        File mediaStorage = new File(mediaStorageDir);
+        if (!mediaStorage.exists()) {
+            if (!mediaStorage.mkdirs()) {
+                AKLog.e("mkdirs error");
+                return null;
+            }
+        }
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        File mediaFile = new File(mediaStorageDir + File.separator + "IMG_" + timeStamp
+                + ".jpg");
+
+        return Uri.fromFile(mediaFile);
+    }
+
+    /**
+     * 获取图片的绝对地址
+     *
+     * @param contentURI
+     * @return
+     */
+    public static String getRealPathFromURI(Context context, Uri contentURI) {
+        String result;
+        String[] projection = { MediaStore.Images.Media.DATA };
+        Cursor cursor = context.getContentResolver().query(contentURI, projection, null, null, null);
+        if (cursor == null) {
+            result = contentURI.getPath();
+        } else {
+            cursor.moveToFirst();
+            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+            result = cursor.getString(idx);
+            cursor.close();
+        }
+        return result;
     }
 
 }

@@ -448,6 +448,12 @@ public class MPostApi {
 
         final Context context = getContext();
         String[] photos = photoList.toArray(new String[photoList.size()]);
+        /**
+         * 线程未处理
+         */
+//        for(int i=0 ;i<photos.length;i++){
+//            photos[i] = Utils.getCompressImage(photos[i]);
+//        }
         Bmob.uploadBatch(context, photos, new UploadFilesListener() {
 
             @Override
@@ -466,6 +472,51 @@ public class MPostApi {
                 listener.onFailure(statuscode, errormsg);
             }
         });
+    }
+
+
+    public static void uploadAvatar(final MUser user, String path, final ResponseListener listener) {
+        Bmob.uploadBatch(getContext(), new String[]{path}, new UploadFilesListener() {
+            @Override
+            public void onSuccess(List<BmobFile> files, List<String> urls, boolean isDone) {
+                user.setPortraitUrl(urls.get(0));
+                user.update(getContext(), listener.update());
+                AKLog.d("avatar",urls.get(0));
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                listener.onFailure(i, s);
+            }
+        });
+
+
+        /**
+         * 图片被加密传输
+         */
+//        BmobProFile.getInstance(getContext()).upload(path, new UploadListener() {
+//            // fileName ：文件名（带后缀），这个文件名是唯一的，开发者需要记录下该文件名，方便后续下载或者进行缩略图的处理
+//            // url        ：文件地址
+//            // file        :BmobFile文件类型，`V3.4.1版本`开始提供，用于兼容新旧文件服务。
+//            @Override
+//            public void onSuccess(String fileName, String url, BmobFile bmobFile) {
+////                user.setPortraitUrl(url);
+//                AKToast.show(getContext(), url);
+//                AKLog.d(fileName);
+//                AKLog.d(url);
+////                user.save(getContext(), listener.save());
+//            }
+//
+//            @Override
+//            public void onProgress(int i) {
+//
+//            }
+//
+//            @Override
+//            public void onError(int i, String s) {
+//                listener.onFailure(i, s);
+//            }
+//        });
     }
 
     /**

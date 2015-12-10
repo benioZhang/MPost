@@ -24,7 +24,7 @@ public class ImageLoader implements ImageListener {
 
     @Override
     public void load(ImageView imageView, String string) {
-        mManager.load(string).into(imageView);
+        load(imageView,string,null);
     }
 
     public void load(ImageView imageView, String string, @DrawableRes int placeholder) {
@@ -33,6 +33,14 @@ public class ImageLoader implements ImageListener {
 
     public void load(ImageView imageView, @DrawableRes int res) {
         load(imageView, res, null);
+    }
+
+    public void load(ImageView imageView, String string, BitmapTransformation transformation) {
+        if (transformation != null) {
+            mManager.load(string).transform(transformation).into(imageView);
+        } else {
+            mManager.load(string).into(imageView);
+        }
     }
 
     public void load(ImageView imageView, @DrawableRes int res, BitmapTransformation transformation) {
