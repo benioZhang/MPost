@@ -191,6 +191,7 @@ public class MPostApi {
         query.and(queries);
         query.include(Column.Post.AUTHOR);
         query.setLimit(Constant.LIKE_RANK_NUM);
+        query.order(Column.Post.REVERSE_LIKE_COUNT + "," + Column.Post.REVERSE_CREATED_AT);
         query.addWhereNotEqualTo(Column.Post.VISIBILITY, PostVisibility.PRIVATE.getVisibility());
         query.findObjects(getContext(), listener);
     }
@@ -548,7 +549,6 @@ public class MPostApi {
         user.setUsername(account);
         user.setPassword(password);
         user.setName(account);
-        user.setCanNotPost(false);
         user.signUp(getContext(), listener.save());
     }
 

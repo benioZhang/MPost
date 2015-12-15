@@ -31,17 +31,6 @@ public class MUser extends BmobUser implements Serializable {
      */
     private BmobRelation likeRelation;
 
-    /** 管理员控制能否post **/
-    private boolean canNotPost;
-
-    public boolean getCanNotPost() {
-        return canNotPost;
-    }
-
-    public void setCanNotPost(boolean canNotPost) {
-        this.canNotPost = canNotPost;
-    }
-
     public BmobRelation getLikeRelation() {
         return likeRelation;
     }
@@ -90,7 +79,6 @@ public class MUser extends BmobUser implements Serializable {
     public String toString() {
         return "{" +
                 "name='" + name + '\'' +
-                "canNotPost='" + canNotPost + '\'' +
                 ", portraitUrl='" + portraitUrl + '\'' +
                 ", followRelation=" + followRelation +
                 ", favRelation=" + favRelation +

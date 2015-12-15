@@ -18,7 +18,8 @@ import java.util.List;
  */
 public class FavoriteListFragment extends TimeLineFragment {
 
-    void getPostList(String filter) {
+    @Override
+    void getPostList() {
         MPostApi.getMyFavouritePost(AppContext.getInstance().getUser(), new QueryListener<MPost>() {
             @Override
             public void onFailure(int code, String msg) {

@@ -146,7 +146,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     /**
      * 点击名字进入个人详情
      */
-    @OnClick(R.id.tv_name)
+    @OnClick(R.id.ll_header)
     void onUserNameClickEvent() {
         mDrawerLayout.closeDrawers();
         MUser user = AppContext.getInstance().getUser();
